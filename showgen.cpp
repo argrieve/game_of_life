@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 				return 0;
 		}
 	}
-
+	// Debugging
 	std::cout << "isASCII: " << isASCII << '\n';
 	std::cout << "filename: " << filename << '\n';
 	std::cout << "gens: " << num_gens << '\n';
@@ -105,8 +105,8 @@ int main(int argc, char *argv[])
 	std::cout << "ty: " << ty_l << " to " << ty_h << '\n';
 	std::cout << "wx: " << wx_l << " to " << wx_h << '\n';
 	std::cout << "wy: " << wy_l << " to " << wy_h << '\n';
-	return 0;
 
+	return 0;
 }
 
 bool parse_lh(char *input, unsigned int *low, unsigned int *high)
