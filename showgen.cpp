@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 	unsigned int tx_h = 9;
 	unsigned int ty_l = 0;
 	unsigned int ty_h = 9;
-	unsigned int wx_1 = 0;
+	unsigned int wx_l = 0;
 	unsigned int wx_h = 9;
 	unsigned int wy_l = 0;
 	unsigned int wy_h = 9;
@@ -67,6 +67,27 @@ int main(int argc, char *argv[])
 				}
 				break;
 
+			case 'x':
+				if(!parse_lh(optarg, &ty_l, &ty_h)) {
+					std::cerr << "Invalid range for switch -ty.\n";
+					return 1;
+				}
+				break;
+
+			case 'y':
+				if(!parse_lh(optarg, &wx_l, &wx_h)) {
+					std::cerr << "Invalid range for switch -wx.\n";
+					return 1;
+				}
+				break;
+
+			case 'z':
+				if(!parse_lh(optarg, &wy_l, &wy_h)) {
+					std::cerr << "Invalid range for switch -wy.\n";
+					return 1;
+				}
+				break;
+
 			case '?':
 				std::cerr << "Illegal switch detected. For help, use '-h'.\n";
 				return 1;
@@ -80,7 +101,10 @@ int main(int argc, char *argv[])
 	std::cout << "isASCII: " << isASCII << '\n';
 	std::cout << "filename: " << filename << '\n';
 	std::cout << "gens: " << num_gens << '\n';
-	std::cout << "tx: " << tx_l << "," << tx_h << '\n';
+	std::cout << "tx: " << tx_l << " to " << tx_h << '\n';
+	std::cout << "ty: " << ty_l << " to " << ty_h << '\n';
+	std::cout << "wx: " << wx_l << " to " << wx_h << '\n';
+	std::cout << "wy: " << wy_l << " to " << wy_h << '\n';
 	return 0;
 
 }
@@ -89,7 +113,6 @@ bool parse_lh(char *input, unsigned int *low, unsigned int *high)
 {
 	if (strstr(input, "-")) return false;
 	sscanf(input, "%d,%d", low, high);
-	std::cout << *low << ", " << *high << '\n';
 	if (*low >= *high) return false;
 	return true;
 }
