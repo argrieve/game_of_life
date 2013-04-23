@@ -6,7 +6,7 @@ rules::rules(char _alive, char _dead)
 	dead = _dead;
 }
 
-void rules::update_cell(cell c, unsigned int neighbors)
+void rules::update_cell(cell &c, unsigned int neighbors)
 {
 	if(c.isAlive()) {
 		// Cell lives if there are 2 or 3 neighbors

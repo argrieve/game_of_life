@@ -8,7 +8,7 @@ class rules {
 	char dead;
 	public:
 		rules(char _alive, char _dead);
-		void update_cell(cell c, unsigned int neighbors);
+		void update_cell(cell &c, unsigned int neighbors);
 };
 
 #endif
