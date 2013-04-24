@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <iostream>
+#include <sstream>
 #include <getopt.h>
-#include <stdio.h>
 #include <string.h>
 
-bool parse_lh(char *input, unsigned int *low, unsigned int *high);
+using namespace std;
+
+bool parse_lh(char *in1, char *in2, int *low, int *high);
 void show_help();
 
 int main(int argc, char *argv[]) 
@@ -13,14 +15,14 @@ int main(int argc, char *argv[])
 	bool isASCII = true;
 	char *filename = NULL;
 	int num_gens = 0;
-	unsigned int tx_l = 0;
-	unsigned int tx_h = 9;
-	unsigned int ty_l = 0;
-	unsigned int ty_h = 9;
-	unsigned int wx_l = 0;
-	unsigned int wx_h = 9;
-	unsigned int wy_l = 0;
-	unsigned int wy_h = 9;
+	int tx_l = 0;
+	int tx_h = 9;
+	int ty_l = 0;
+	int ty_h = 9;
+	int wx_l = 0;
+	int wx_h = 9;
+	int wy_l = 0;
+	int wy_h = 9;
 
 	// Set up list of command line options to parse
 	struct option long_options[] =
@@ -50,7 +52,7 @@ int main(int argc, char *argv[])
 			
 			case 'g':
 				if (strstr(optarg, "-")) {
-					std::cerr << "Switch -g must be followed by a positive integer value.\n";
+					cerr << "Switch -g must be followed by a positive integer value.\n";
 					return 1;
 				}
 				num_gens = atoi(optarg);
@@ -61,35 +63,67 @@ int main(int argc, char *argv[])
 				return 0;
 
 			case 'w':
-				if(!parse_lh(optarg, &tx_l, &tx_h)) {
-					std::cerr << "Invalid range for switch -tx.\n";
-					return 1;
+				if (optind == argc)	{
+					if(!parse_lh(optarg, optarg, &tx_l, &tx_h)) {
+						cerr << "Invalid range for swtich -tx.\n";
+						return 1;
+					}
+				}
+				else { 
+					if(!parse_lh(optarg, argv[optind], &tx_l, &tx_h)) {
+						cerr << "Invalid range for switch -tx.\n";
+						return 1;
+					}
 				}
 				break;
-
+			
 			case 'x':
-				if(!parse_lh(optarg, &ty_l, &ty_h)) {
-					std::cerr << "Invalid range for switch -ty.\n";
-					return 1;
+				if (optind == argc) {	
+					if(!parse_lh(optarg, optarg, &ty_l, &ty_h)) {
+						cerr << "Invalid range for swtich -ty.\n";
+						return 1;
+					}
+				}
+				else { 
+					if(!parse_lh(optarg, argv[optind], &ty_l, &ty_h)) {
+						cerr << "Invalid range for switch -ty.\n";
+						return 1;
+					}
 				}
 				break;
 
 			case 'y':
-				if(!parse_lh(optarg, &wx_l, &wx_h)) {
-					std::cerr << "Invalid range for switch -wx.\n";
-					return 1;
+				if (optind == argc) {	
+					if(!parse_lh(optarg, optarg, &wx_l, &wx_h)) {
+						cerr << "Invalid range for swtich -wx.\n";
+						return 1;
+					}
+				}
+				else { 
+					if(!parse_lh(optarg, argv[optind], &wx_l, &wx_h)) {
+						cerr << "Invalid range for switch -wx.\n";
+						return 1;
+					}
 				}
 				break;
 
 			case 'z':
-				if(!parse_lh(optarg, &wy_l, &wy_h)) {
-					std::cerr << "Invalid range for switch -wy.\n";
-					return 1;
+				if (optind == argc) {	
+					if(!parse_lh(optarg, optarg, &wy_l, &wy_h)) {
+						cerr << "Invalid range for swtich -wy.\n";
+						return 1;
+					}
+				}
+				else { 
+					if(!parse_lh(optarg, argv[optind], &wy_l, &wy_h)) {
+						cerr << "Invalid range for switch -wy.\n";
+						return 1;
+					}
 				}
 				break;
 
 			case '?':
-				std::cerr << "Illegal switch detected. For help, use '-h'.\n";
+				cerr << "Illegal switch detected. For help, use '-h'.\n";
 				return 1;
 
 			default:
@@ -98,26 +132,40 @@ int main(int argc, char *argv[])
 		}
 	}
 	// Debugging
-	std::cout << "isASCII: " << isASCII << '\n';
-	std::cout << "filename: " << filename << '\n';
-	std::cout << "gens: " << num_gens << '\n';
-	std::cout << "tx: " << tx_l << " to " << tx_h << '\n';
-	std::cout << "ty: " << ty_l << " to " << ty_h << '\n';
-	std::cout << "wx: " << wx_l << " to " << wx_h << '\n';
-	std::cout << "wy: " << wy_l << " to " << wy_h << '\n';
+	cout << "isASCII: " << isASCII << '\n';
+	cout << "filename: " << filename << '\n';
+	cout << "gens: " << num_gens << '\n';
+	cout << "tx: " << tx_l << " to " << tx_h << '\n';
+	cout << "ty: " << ty_l << " to " << ty_h << '\n';
+	cout << "wx: " << wx_l << " to " << wx_h << '\n';
+	cout << "wy: " << wy_l << " to " << wy_h << '\n';
 
 	return 0;
 }
 
-bool parse_lh(char *input, unsigned int *low, unsigned int *high)
+bool parse_lh(char *in1, char *in2, int *low, int *high)
 {
-	if (strstr(input, "-")) return false;
-	sscanf(input, "%d,%d", low, high);
-	if (*low >= *high) return false;
+	// Build string object
+	string s;
+	s += in1;
+	s += " ";
+	s += in2;
+
+	// Replace first occurance of ","
+	int i = s.find(",");
+	if (i != string::npos) s.replace(i, 1, " ");
+
+	// Use stream to parse integers from the string
+	istringstream stream(s);
+	stream >> *low >> *high;
+
+	// Error check
+	if (*low > *high) return false;
+
 	return true;
 }
 
 void show_help()
 {
-	std::cout << "Program help goes here.\n";
+	cout << "Program help goes here.\n";
 }

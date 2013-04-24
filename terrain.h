@@ -2,16 +2,18 @@
 #define TERRAIN_H
 
 #include "cell.h"
+#include "coord.h"
+#include "range.h"
 
 class terrain {
-	unsigned int x, y;
+	range &x, &y;
 	cell **carr;
 	public:
-		terrain(unsigned int _x, unsigned int _y);
+		terrain(range _x, range _y);
 		~terrain();
-		inline unsigned int get_x() { return x; }
-		inline unsigned int get_y() { return y; }
-		cell& get_cell(unsigned int _x, unsigned int _y);
+		inline range getX() { return x; }
+		inline range getY() { return y; }
+		cell& get_cell(coord point);
 };
 
 #endif
