@@ -10,6 +10,7 @@ class world {
 	int anchor_x, anchor_y;
 	public:
 		world(int tx_l, int tx_h, int ty_l, int ty_h);
+		~world();
 		void next_gen();
 		inline unsigned int curr_gen() { return gen; }
 	private:

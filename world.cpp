@@ -44,6 +44,12 @@ void world::next_gen()
 	return;
 }
 
+world::~world()
+{
+	for (int i=0; i<width; i++) delete[] carr[i];
+	delete[] carr;
+}
+
 void world::update_cell(int x, int y)
 {
 	int neighbors = count_neighbors(x, y);
