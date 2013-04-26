@@ -1,8 +1,11 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
 #include "coord.h"
 #include <vector>
 
 class config {
-	coord x_range, y_range;
+	coord *x_range, *y_range;
 	std::vector<coord> alive;
 	public:
 		config();
@@ -15,3 +18,5 @@ class config {
 		// For debugging:
 		void print();
 };
+
+#endif

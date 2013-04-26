@@ -3,6 +3,8 @@
 #include <sstream>
 #include <getopt.h>
 #include <string.h>
+#include "reader.h"
+#include "config.h"
 
 using namespace std;
 
@@ -15,14 +17,20 @@ int main(int argc, char *argv[])
 	bool isASCII = true;
 	char *filename = NULL;
 	int num_gens = 0;
-	int tx_l = 0;
-	int tx_h = 9;
-	int ty_l = 0;
-	int ty_h = 9;
-	int wx_l = 0;
-	int wx_h = 9;
-	int wy_l = 0;
-	int wy_h = 9;
+	bool tx_found = false;
+	bool ty_found = false;
+	bool wx_found = false;
+	bool wy_found = false;
+
+	// Terrain and window defaults	
+	int tx_l = -10;
+	int tx_h = 10;
+	int ty_l = -10;
+	int ty_h = 10;
+	int wx_l = tx_l;
+	int wx_h = tx_h;
+	int wy_l = ty_l;
+	int wy_h = ty_h;
 
 	// Set up list of command line options to parse
 	struct option long_options[] =
@@ -75,6 +83,7 @@ int main(int argc, char *argv[])
 						return 1;
 					}
 				}
+				tx_found = true;
 				break;
 			
 			case 'x':
@@ -90,6 +99,7 @@ int main(int argc, char *argv[])
 						return 1;
 					}
 				}
+				ty_found = true;
 				break;
 
 			case 'y':
@@ -105,6 +115,7 @@ int main(int argc, char *argv[])
 						return 1;
 					}
 				}
+				wx_found = true;
 				break;
 
 			case 'z':
@@ -120,6 +131,7 @@ int main(int argc, char *argv[])
 						return 1;
 					}
 				}
+				wy_found = true;
 				break;
 
 			case '?':
@@ -131,6 +143,7 @@ int main(int argc, char *argv[])
 				return 0;
 		}
 	}
+	/*
 	// Debugging
 	cout << "isASCII: " << isASCII << '\n';
 	cout << "filename: " << filename << '\n';
@@ -139,6 +152,12 @@ int main(int argc, char *argv[])
 	cout << "ty: " << ty_l << " to " << ty_h << '\n';
 	cout << "wx: " << wx_l << " to " << wx_h << '\n';
 	cout << "wy: " << wy_l << " to " << wy_h << '\n';
+	*/
+
+	config *cnfg = new config();
+	reader rd;
+	rd.read(*cnfg, filename);
+	
 
 	return 0;
 }

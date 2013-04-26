@@ -3,6 +3,11 @@
 
 using namespace std;
 
+config::config()
+{
+	x_range = new coord;
+	y_range = new coord;
+}
 void config::setX(int _l, int _h)
 {
 	x_range = coord(_l, _h);

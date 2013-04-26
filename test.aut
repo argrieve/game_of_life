@@ -10,8 +10,8 @@ Another { more evil bogus keyword; we must also consume;
 	the inner bogus statements; };
 
 # Ugly formatting, but allowed:
-Xrange
--10 10; Yrange -5 5;
+#Xrange
+#-10 10; Yrange -5 5;
 
 Initial { 
 	Y = 2 :		-1;			# Sets (-1, 2) to "alive"

@@ -13,11 +13,14 @@ vector<coord> get_living(string &str);
 
 int main(int argc, char **argv)
 {
-	ifstream foo(argv[1]);
+	//ifstream foo(argv[1]);
+	filebuf fb;
 	istream fin(cin.rdbuf());
 
 	if (argc > 1) {
-		fin.rdbuf(foo.rdbuf());
+		//fin.rdbuf(foo.rdbuf());
+		fb.open(argv[1], ios::in);
+		fin.rdbuf(&fb);
 	}
 
 	// Get length of the file
@@ -30,7 +33,7 @@ int main(int argc, char **argv)
 	char *buffer = new char[length];
 
 	fin.read(buffer, length);
-	foo.close();
+//	foo.close();
 
 	string str(buffer);
 	delete[] buffer;
@@ -39,9 +42,9 @@ int main(int argc, char **argv)
 	coord x = get_range('x', str);
 	coord y = get_range('y', str);
 	get_living(str);
-	//cout << "X: (" << x.getX() << ", " << x.getY() << ")\n";
-	//cout << "Y: (" << y.getX() << ", " << y.getY() << ")\n";
-	//cout << str;
+	cout << "X: (" << x.getX() << ", " << x.getY() << ")\n";
+	cout << "Y: (" << y.getX() << ", " << y.getY() << ")\n";
+	cout << str;
 
 	return 0;
 }
