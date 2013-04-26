@@ -20,7 +20,7 @@ void reader::read(config &cnfg, char *fname)
 		fb.open(fname, ios::in);
 		fin.rdbuf(&fb);
 	}
-
+	
 	// Get length of the file
 	fin.seekg(0, fin.end);
 	int length = fin.tellg();
@@ -42,7 +42,6 @@ void reader::read(config &cnfg, char *fname)
 	set_range(cnfg, 'x');
 	set_range(cnfg, 'y');
 	set_living(cnfg);
-	cnfg.print();
 
 	return;
 }

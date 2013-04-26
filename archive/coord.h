@@ -5,10 +5,7 @@ class coord {
 	int *x, *y;
 	public:
 		coord();
-		coord(int _x, int _y) {
-			*x = _x; 
-			*y = _y;
-		}
+		coord(int _x, int _y);
 		~coord();
 		inline int getX() { return *x; }
 		inline int getY() { return *y; }

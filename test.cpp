@@ -2,9 +2,26 @@
 #include <iostream>
 #include <sstream>
 #include <cctype>
+#include "config.h"
 
 using namespace std;
 
+int main()
+{
+	for (int i=0; i<9; i++) {
+		config c;
+		c.setX(-10, 10);
+		c.setY(-20, 20);
+		c.add(1,-1);
+		c.add(2,-2);
+		c.add(3,-3);
+		c.add(4,-4);
+		c.print();
+	}
+	return 0;
+}
+
+/*
 int main()
 {
 	string str("Y = 2 : -1;"); 
@@ -26,6 +43,7 @@ int main()
 
 	return 0;
 }
+*/
 
 /*
 int main()
