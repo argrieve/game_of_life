@@ -3,21 +3,26 @@
 #include <sstream>
 #include <cctype>
 #include "config.h"
+#include "reader.h"
+#include "world.h"
 
 using namespace std;
 
 int main()
 {
-	for (int i=0; i<9; i++) {
-		config c;
-		c.setX(-10, 10);
-		c.setY(-20, 20);
-		c.add(1,-1);
-		c.add(2,-2);
-		c.add(3,-3);
-		c.add(4,-4);
-		c.print();
-	}
+	config c;
+
+	reader r;
+	r.read(c, "test.aut");
+
+	//c.print();
+
+	world w(c);
+	w.print_gen();
+
+	w.next_gen();
+	w.print_gen();
+
 	return 0;
 }
 

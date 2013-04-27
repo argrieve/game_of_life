@@ -1,21 +1,29 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "cell.h"
+#include "config.h"
+#include <vector>
+
+using namespace std;
 
 class world {
 	unsigned int gen;
-	cell **carr;
 	unsigned int width, height;
 	int anchor_x, anchor_y;
+	vector<vector<int> > cells;
+	vector<vector<int> > cells_next;
 	public:
-		world(int tx_l, int tx_h, int ty_l, int ty_h);
-		~world();
+		world(config &cnfg);
+		//~world();
 		void next_gen();
 		inline unsigned int curr_gen() { return gen; }
+		void print_gen();
 	private:
+		void update_world();
 		void update_cell(int x, int y);
 		int count_neighbors(int x, int y);
+		int to_screen_x(int _x);
+		int to_screen_y(int _y);
 };
 
 #endif

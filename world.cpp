@@ -1,37 +1,49 @@
 #include "world.h"
+#include <iostream>
 
-world::world(int tx_l, int tx_h, int ty_l, int ty_h)
+using namespace std;
+
+world::world(config &cnfg)
 {
 	// Reset generation number
 	gen = 0;
 
-	// Correct backwards coordinates
-	if (tx_l > tx_h) {
-		int tmp = tx_l;
-		tx_l = tx_h;
-		tx_h = tmp;
-	}
-	if (ty_l > ty_h) {
-		int tmp = ty_l;
-		ty_l = ty_h;
-		ty_h = tmp;
-	}
-	
 	// Set anchor as upper left corner of the world
-	anchor_x = tx_l; 
-	anchor_y = ty_h; 
+	anchor_x = cnfg.getXL();
+	anchor_y = cnfg.getYH(); 
 
 	// Determine width of the world based on tx_l and tx_h
 	width = 0;
-	for (int i=tx_l; i<=tx_h; i++) width++;
+	for (int i=cnfg.getXL(); i<=cnfg.getXH(); i++) width++;
 
 	// Determine height of the world based on ty_l and ty_h
 	height = 0;
-	for (int i=ty_l; i<=ty_h; i++) height++;
+	for (int i=cnfg.getYL(); i<=cnfg.getYH(); i++) height++;
 
 	// Build the array of cells (i.e. the world)
-	carr = new cell*[width];
-	for (int i=0; i<width; i++) carr[i] = new cell[height];
+	cells.resize(width);
+	cells_next.resize(width);
+	for (int i=0; i<width; i++) {
+		cells[i].resize(height);
+		cells_next[i].resize(height);
+	}
+
+	// Initialize the array of cells to 'dead'
+	for (int i=0; i<cells.size(); i++) 
+		for (int j=0; j<cells[0].size(); j++) {
+			cells[i][j] = 0;
+			cells_next[i][j] = 0;
+		}
+	
+	// Initialize alive cells from config class
+	vector<int> alive = cnfg.getAlive();	
+	int x, y;
+	for (int i=0; i<alive.size(); i+=2) {
+		x = to_screen_x(alive[i]);
+		y = to_screen_y(alive[i+1]);
+		cells[x][y] = 1;
+	}
+	
 }
 
 void world::next_gen()
@@ -40,35 +52,52 @@ void world::next_gen()
 		for(int j=0; j<height; j++)
 			update_cell(i, j);
 	
-	gen++;
+	update_world();
+
 	return;
 }
 
-world::~world()
+void world::print_gen()
 {
-	for (int i=0; i<width; i++) delete[] carr[i];
-	delete[] carr;
+	cout << "Generation: " << gen << endl;
+	for (int i=0; i<height; i++) {
+		for (int j=0; j<width; j++) {
+			cout << cells[j][i];
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
+
+void world::update_world()
+{
+	for (int i=0; i<width; i++)
+		for (int j=0; j<height; j++)
+			cells[i][j] = cells_next[i][j];	
+	
+	gen++;
+
+	return;
 }
 
 void world::update_cell(int x, int y)
 {
 	int neighbors = count_neighbors(x, y);
-	cell &c = carr[x][y];
 	
 	// Apply GoL rules
-	if (c.isAlive()) {
+	if (cells[x][y]) {
 		// Cell lives if there are 2 or 3 neighbors
-		if(neighbors == 2 || neighbors == 3) c.set_state(true);
+		if(neighbors == 2 || neighbors == 3) cells_next[x][y] = 1;
 
 		// Cell dies if neighbors < 2 (loneliness)
 		// Cell dies if neighbors > 3 (overpopulation)
-		else c.set_state(false);
+		else cells_next[x][y] = 0;
 	}
 	else {
 		// Cell lives if neighbors = 3 (reproduction)
-		if (neighbors == 3) c.set_state(true);
+		if (neighbors == 3) cells_next[x][y] = 1;
 
-		else c.set_state(false);
+		else cells_next[x][y] = 0;
 	}
 
 	return;
@@ -99,8 +128,18 @@ int world::count_neighbors(int x, int y)
 			// Don't count the cell itself
 			if (i==x && j==y) continue;
 			// Check neighbor
-			if (carr[i][j].isAlive()) count++;
+			if (cells[i][j] == 1) count++;
 		}
 
 	return count;
+}
+
+int world::to_screen_x(int _x)
+{
+	return _x + width/2;
+}
+
+int world::to_screen_y(int _y)
+{
+	return height/2 - _y;
 }
