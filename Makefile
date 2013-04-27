@@ -1,6 +1,6 @@
 all:showgen
-showgen:showgen.o  config.o world.o reader.o 
-	g++ -o showgen showgen.o  config.o world.o reader.o 
+showgen:showgen.o config.o world.o reader.o 
+	g++ -o showgen showgen.o config.o world.o reader.o 
 showgen.o:showgen.cpp
 	g++ -c showgen.cpp
 config.o:config.cpp config.h

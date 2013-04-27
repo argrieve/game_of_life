@@ -5,6 +5,7 @@
 #include <string.h>
 #include "reader.h"
 #include "config.h"
+#include "world.h"
 
 using namespace std;
 
@@ -154,10 +155,18 @@ int main(int argc, char *argv[])
 	cout << "wy: " << wy_l << " to " << wy_h << '\n';
 	*/
 
+	// Read input file
 	config *cnfg = new config();
 	reader rd;
 	rd.read(*cnfg, filename);
-	
+
+	// Override terrain ranges
+	if (tx_found) cnfg->setX(tx_l, tx_h);
+	if (ty_found) cnfg->setY(ty_l, ty_h);
+
+	// Build world
+	world w(*cnfg);
+	w.print_gen(isASCII);
 
 	return 0;
 }

@@ -57,16 +57,42 @@ void world::next_gen()
 	return;
 }
 
-void world::print_gen()
+void world::print_gen(bool ascii)
 {
-	cout << "Generation: " << gen << endl;
-	for (int i=0; i<height; i++) {
-		for (int j=0; j<width; j++) {
-			cout << cells[j][i];
+	// Print ASCII representation
+	if (ascii) {
+		for (int i=0; i<height; i++) {
+			for (int j=0; j<width; j++) {
+				if (cells[j][i]) cout << 1;
+				else cout << '~';
+			}
+			cout << endl;
 		}
-		cout << endl;
 	}
-	cout << endl;
+	// Print .aut file format
+	else {
+		// Print generation number as a comment
+		cout << "#\n" << "# Generation: " << gen << "\n#\n";
+
+		// Range keywords
+		cout << "Xrange " << anchor_x << " " << (int)(anchor_x + width-1) << ";\n";
+		cout << "Yrange " << (int)(anchor_y-height+1) << " " << anchor_y << ";\n";
+
+		// Initial keyword
+		cout << "Initial {\n";
+
+		for (int i=0; i<height; i++) {
+			// Search each column for 'alive' cells
+			for (int j=0; j<width; j++) {
+				if (cells[j][i]) {
+					print_col(i); 
+					break;
+				}
+			} // end width loop
+		} // end height loop
+		
+		cout << "};\n";
+	}
 }
 
 void world::update_world()
@@ -142,4 +168,22 @@ int world::to_screen_x(int _x)
 int world::to_screen_y(int _y)
 {
 	return height/2 - _y;
+}
+
+void world::print_col(int y)
+{
+	cout << "  Y = " << (int)(height/2 - y) << " :   ";
+
+	// Find all alive cells in the column
+	bool first = true;
+	for (int i=0; i<width; i++) {
+		// Found an live cell
+		if (cells[i][y]) {
+			// Don't print a comma if it is the first alive cell
+			if (first) { cout << (int)(i-width/2);	first = false; }
+			else cout << ", " << (int)(i-width/2);
+		}
+	}
+
+	cout << ";\n";
 }
