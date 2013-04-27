@@ -144,6 +144,26 @@ int main(int argc, char *argv[])
 				return 0;
 		}
 	}
+
+	// Read input file
+	config *cnfg = new config();
+	reader rd;
+	rd.read(*cnfg, filename);
+
+	// Override terrain ranges
+	if (tx_found) cnfg->setX(tx_l, tx_h);
+	if (ty_found) cnfg->setY(ty_l, ty_h);
+
+	// Override window ranges
+	if (wx_found) {
+		if (wx_l < tx_l) wx_l = tx_l;
+		if (wx_h > tx_h) wx_h = tx_h;
+	}
+	if (wy_found) {
+		if (wy_l < ty_l) wy_l = ty_l;
+		if (wy_h > ty_h) wy_h = ty_h;
+	}
+
 	/*
 	// Debugging
 	cout << "isASCII: " << isASCII << '\n';
@@ -155,17 +175,14 @@ int main(int argc, char *argv[])
 	cout << "wy: " << wy_l << " to " << wy_h << '\n';
 	*/
 
-	// Read input file
-	config *cnfg = new config();
-	reader rd;
-	rd.read(*cnfg, filename);
-
-	// Override terrain ranges
-	if (tx_found) cnfg->setX(tx_l, tx_h);
-	if (ty_found) cnfg->setY(ty_l, ty_h);
-
 	// Build world
 	world w(*cnfg);
+
+	// Perform specified number of generations
+	for (int i=0; i<num_gens; i++)
+		w.next_gen();
+
+	// Write output file
 	w.print_gen(isASCII);
 
 	return 0;
@@ -195,5 +212,40 @@ bool parse_lh(char *in1, char *in2, int *low, int *high)
 
 void show_help()
 {
-	cout << "Program help goes here.\n";
+	// Program description
+	cout << "\nSHOWGEN\n\n";
+	cout << "\tThis program performs a simple simulation of John Conway's\n";
+	cout << "\tGame of Life. A .aut file is read (either as an argument or\n";
+	cout << "\tredirected from stdin) and used as a starting generation for\n";
+	cout << "\tthe simulation. The world is updated by a specified number of\n";
+	cout << "\tgenerations (see SWITCHES section), and the resulting state\n";
+	cout << "\tof the world is written to stdout.\n";
+
+	// Usage information
+	cout << "\n\nUSAGE\n\n";
+	cout << "\t./showgen [-f <file>] [options]\n";
+	cout << "\t./showgen [options] < <file>\n";
+
+	// Legal switches
+	cout << "\n\nSWITCHES\n\n";
+	cout << "\t-a \tOutput in .aut format.\n\n";	
+	cout << "\t-g \tSpecify the desired number of generations. Switch should\n";	
+	cout << "\t   \tbe followed by a positive integer. If omitted, the number\n";	
+	cout << "\t   \tof generations is zero.\n\n";	
+	cout << "\t-h \tDisplay help and information.\n\n";
+	cout << "\t-tx\tSet the x-range of the terrain. Switch should be followed\n";
+	cout << "\t   \tby a coordinate pair, where each coordinate is seperated \n";
+	cout << "\t   \tby a comma or a space. This switch will override any value\n";
+	cout << "\t   \tfound in the .aut file.\n\n";
+	cout << "\t-ty\tSet the y-range of the terrain. See switch '-tx' for more\n";
+	cout << "\t   \tinformation.\n\n";
+	cout << "\t-wx\tSet the x-range of the output window. Switch should be \n";
+	cout << "\t   \tfollowed by a coordinate pair, where each coordinate is \n";
+	cout << "\t   \tseperated by a comma or a space. The window range cannot \n";
+	cout << "\t   \tbe larger than the x-range of the terrain. If omitted, the\n";
+	cout << "\t   \twindow defaults to the x-range of the terrain.\n\n";
+	cout << "\t-wy\tSet the y-range of the output window. See switch '-wx' for\n";
+	cout << "\t   \tmore information.\n\n";
+
+
 }
