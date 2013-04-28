@@ -238,9 +238,8 @@ void show_help()
 	cout << "\t   \tinformation.\n\n";
 	cout << "\t-wx\tSet the x-range of the output window. Switch should be \n";
 	cout << "\t   \tfollowed by a coordinate pair, where each coordinate is \n";
-	cout << "\t   \tseperated by a comma or a space. The window range cannot \n";
-	cout << "\t   \tbe larger than the x-range of the terrain. If omitted, the\n";
-	cout << "\t   \twindow defaults to the x-range of the terrain.\n\n";
+	cout << "\t   \tseperated by a comma or a space. If omitted, the window\n";
+	cout << "\t   \tdefaults to the x-range of the terrain.\n\n";
 	cout << "\t-wy\tSet the y-range of the output window. See switch '-wx' for\n";
 	cout << "\t   \tmore information.\n\n";
 

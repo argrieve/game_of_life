@@ -4,14 +4,15 @@
 #include "config.h"
 #include <vector>
 
-using namespace std;
-
 class world {
+	//std::string name;
+	//char dead, alive;
+	//char dead_color[3], alive_color[3];
 	unsigned int gen;
 	unsigned int width, height;
 	int anchor_x, anchor_y;
-	vector<vector<int> > cells;
-	vector<vector<int> > cells_next;
+	std::vector<std::vector<int> > cells;
+	std::vector<std::vector<int> > cells_next;
 	public:
 		world(config &cnfg);
 		inline unsigned int curr_gen() { return gen; }

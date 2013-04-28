@@ -16,9 +16,9 @@ window::window(int wx_l, int wx_h, int wy_l, int wy_h)
 	anchor_y = wy_h;
 	for (int i=wy_l; i<=anchor_y; i++) height++;
 
-	cout << "anchors: " << anchor_x << ", " << anchor_y << endl;
-	cout << "width: " << width << endl;
-	cout << "height: " << height << endl;
+	//cout << "anchors: " << anchor_x << ", " << anchor_y << endl;
+	//cout << "width: " << width << endl;
+	//cout << "height: " << height << endl;
 }
 
 void window::print_world(world &w, bool ascii)
@@ -40,10 +40,10 @@ void window::print_ascii(world &w)
 	int ter_y_start = w.get_anchor_y();
 	int ter_y_end = ter_y_start - w.get_height() + 1;
 	
-	cout<< "ter_x_start: " << ter_x_start << endl;
-	cout<< "ter_x_end  : " << ter_x_end << endl;
-	cout<< "ter_y_start: " << ter_y_start << endl;
-	cout<< "ter_y_end  : " << ter_y_end << endl;
+	//cout<< "ter_x_start: " << ter_x_start << endl;
+	//cout<< "ter_x_end  : " << ter_x_end << endl;
+	//cout<< "ter_y_start: " << ter_y_start << endl;
+	//cout<< "ter_y_end  : " << ter_y_end << endl;
 
 	// Loop through window
 	for (int i=anchor_y; i>(int)(anchor_y-height); i--) {

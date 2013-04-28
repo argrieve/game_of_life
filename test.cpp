@@ -4,7 +4,6 @@
 #include <cctype>
 #include "config.h"
 #include "reader.h"
-#include "world.h"
 
 using namespace std;
 
@@ -15,13 +14,13 @@ int main()
 	reader r;
 	r.read(c, "test.aut");
 
-	//c.print();
+	c.print();
 
-	world w(c);
-	w.print_gen();
+//	world w(c);
+//	w.print_gen();
 
-	w.next_gen();
-	w.print_gen();
+//	w.next_gen();
+//	w.print_gen();
 
 	return 0;
 }
