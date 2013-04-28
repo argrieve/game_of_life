@@ -158,6 +158,8 @@ int main(int argc, char *argv[])
 	// Set window ranges
 	if (!wx_found) { wx_l = cnfg->getXL(); wx_h = cnfg->getXH(); }
 	if (!wy_found) { wy_l = cnfg->getYL(); wy_h = cnfg->getYH(); }
+	
+	cnfg->print();
 
 	/*
 	// Debugging

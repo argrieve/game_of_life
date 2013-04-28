@@ -140,6 +140,9 @@ void reader::set_colors(config &cnfg)
 	istringstream s6(data.substr(indx1+1, indx2-indx1-1));
 	s6 >> ab;
 
+	// Save to config
+	cnfg.set_colors(dr, dg, db, ar, ag, ab);
+
 	//cout << "Dead colors: " << dr << ", " << dg << ", " << db << endl;
 	//cout << "Alive colors: " << ar << ", " << ag << ", " << ab << endl;
 	

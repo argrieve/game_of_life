@@ -18,15 +18,15 @@ class config {
 		inline std::string get_name() { return name; }
 		inline char get_dead() { return *dead; }
 		inline char get_alive() { return *alive; }
-	//	inline char* get_dead_colors { return color_dead; }
-	//	inline char* get_alive_colors { return color_alive; }
+		char* get_dead_colors(); 
+		char* get_alive_colors(); 
 		inline int getXL() { return *range_xl; }
 		inline int getXH() { return *range_xh; }
 		inline int getYL() { return *range_yl; }
 		inline int getYH() { return *range_yh; }
 		void set_name(const char* str);
 		void set_chars(char d, char a);
-		void set_colors(char *d, char *a);
+		void set_colors(int dr, int dg, int db, int ar, int ag, int ab);
 		void setX(int _l, int _h);
 		void setY(int _l, int _h);
 		void add(int _x, int _y);

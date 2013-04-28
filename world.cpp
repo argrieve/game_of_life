@@ -5,6 +5,17 @@ using namespace std;
 
 world::world(config &cnfg)
 {
+	// Grab the name
+	name = cnfg.get_name();
+
+	// Grab charcters
+	dead = cnfg.get_dead();
+	alive = cnfg.get_alive();
+
+	// Grab colors
+	dead_color = cnfg.get_dead_colors();
+	alive_color = cnfg.get_alive_colors();
+
 	// Reset generation number
 	gen = 0;
 
@@ -47,6 +58,16 @@ world::world(config &cnfg)
 		cells[x][y] = 1;
 	}
 	
+}
+
+char* world::get_dead_color()
+{
+	return dead_color;
+}
+
+char* world::get_alive_color()
+{
+	return alive_color;
 }
 
 void world::next_gen()

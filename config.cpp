@@ -39,6 +39,16 @@ config::~config()
 	delete[] color_alive;
 }
 
+char* config::get_dead_colors()
+{
+	return color_dead;
+}
+
+char* config::get_alive_colors()
+{
+	return color_alive;
+}
+
 void config::set_name(const char* str)
 {
 	name.clear();
@@ -51,14 +61,14 @@ void config::set_chars(char d, char a)
 	*alive = a;
 }
 
-void config::set_colors(char *d, char *a)
+void config::set_colors(int dr, int dg, int db, int ar, int ag, int ab)
 {
-	color_dead[0] = d[0];
-	color_dead[1] = d[1];
-	color_dead[2] = d[2];
-	color_alive[0] = a[0];
-	color_alive[1] = a[1];
-	color_alive[2] = a[2];
+	color_dead[0] = (char)dr;
+	color_dead[1] = (char)dg;
+	color_dead[2] = (char)db;
+	color_alive[0] = (char)ar;
+	color_alive[1] = (char)ag;
+	color_alive[2] = (char)ab;
 }
 
 void config::setX(int _l, int _h)

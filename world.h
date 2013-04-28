@@ -5,9 +5,9 @@
 #include <vector>
 
 class world {
-	//std::string name;
-	//char dead, alive;
-	//char dead_color[3], alive_color[3];
+	std::string name;
+	char dead, alive;
+	char *dead_color, *alive_color;
 	unsigned int gen;
 	unsigned int width, height;
 	int anchor_x, anchor_y;
@@ -15,6 +15,11 @@ class world {
 	std::vector<std::vector<int> > cells_next;
 	public:
 		world(config &cnfg);
+		inline std::string get_name() { return name; }
+		inline char get_dead_char() { return dead; }
+		inline char get_alive_char() { return alive; }
+		char* get_dead_color();
+		char* get_alive_color();
 		inline unsigned int curr_gen() { return gen; }
 		inline unsigned int get_width() { return width; }
 		inline unsigned int get_height() { return height; }

@@ -50,8 +50,8 @@ void window::print_ascii(world &w)
 		for (int j=anchor_x; j<(int)(anchor_x+width); j++) {
 			// Inside terrain
 			if (i <= ter_y_start && i >= ter_y_end && j >= ter_x_start && j <= ter_x_end) {
-				if(w.get_cell(j, i)) cout << "1";
-				else cout << "~";
+				if(w.get_cell(j, i)) cout << w.get_alive_char();
+				else cout << w.get_dead_char();
 			}
 			// Outside terrain
 			else {
