@@ -1,7 +1,11 @@
 .PHONY: showgen
 
-all:showgen
+all:bin showgen
+bin:
+	mkdir bin
 showgen:
-	$(MAKE) -C showgen
+	$(MAKE) -C src/showgen
+	cp src/showgen/showgen ./bin
 clean:
-	$(MAKE) -C showgen clean
+	$(MAKE) -C src/showgen clean
+	rm -r bin
