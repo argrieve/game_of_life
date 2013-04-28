@@ -72,9 +72,9 @@ void world::print_gen(bool ascii)
 {
 	// Print ASCII representation
 	if (ascii) {
-		for (int i=0; i<height; i++) {
-			for (int j=0; j<width; j++) {
-				if (cells[j][i]) cout << 1;
+		for (int i=anchor_y; i>(int)(anchor_y-height); i--) {
+			for (int j=anchor_x; j<(int)(anchor_x+width); j++) {
+				if (cells[to_screen_x(j)][to_screen_y(i)]) cout << '1';
 				else cout << '~';
 			}
 			cout << endl;
@@ -92,10 +92,10 @@ void world::print_gen(bool ascii)
 		// Initial keyword
 		cout << "Initial {\n";
 
-		for (int i=0; i<height; i++) {
+		for (int i=anchor_y; i>(int)(anchor_y-height); i--) {
 			// Search each column for 'alive' cells
-			for (int j=0; j<width; j++) {
-				if (cells[j][i]) {
+			for (int j=anchor_x; j<(int)(anchor_x+width); j++) {
+				if (cells[to_screen_x(j)][to_screen_y(i)]) {
 					print_col(i); 
 					break;
 				}
@@ -173,26 +173,34 @@ int world::count_neighbors(int x, int y)
 
 int world::to_screen_x(int _x)
 {
-	return _x + width/2;
+	int screen_x = 0;
+	int end_x = (int)(anchor_x + width);
+
+	for (int i=anchor_x; i<end_x, i!=_x; i++) screen_x++;
+	return screen_x;
 }
 
 int world::to_screen_y(int _y)
 {
-	return height/2 - _y;
+	int screen_y = 0;
+	int end_y = (int)(anchor_y - height);
+	
+	for (int i=anchor_y; i>end_y, i!=_y; i--) screen_y++;
+	return screen_y;
 }
 
 void world::print_col(int y)
 {
-	cout << "  Y = " << (int)(height/2 - y) << " :   ";
+	cout << "  Y = " << y << " :   ";
 
 	// Find all alive cells in the column
 	bool first = true;
-	for (int i=0; i<width; i++) {
+	for (int i=anchor_x; i<(int)(anchor_x+width); i++) {
 		// Found an live cell
-		if (cells[i][y]) {
+		if (cells[to_screen_x(i)][to_screen_y(y)]) {
 			// Don't print a comma if it is the first alive cell
-			if (first) { cout << (int)(i-width/2);	first = false; }
-			else cout << ", " << (int)(i-width/2);
+			if (first) { cout << i;	first = false; }
+			else cout << ", " << i;
 		}
 	}
 

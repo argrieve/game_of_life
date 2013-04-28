@@ -14,7 +14,6 @@ class world {
 	vector<vector<int> > cells_next;
 	public:
 		world(config &cnfg);
-		//~world();
 		inline unsigned int curr_gen() { return gen; }
 		inline unsigned int get_width() { return width; }
 		inline unsigned int get_height() { return height; }
