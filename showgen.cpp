@@ -6,6 +6,7 @@
 #include "reader.h"
 #include "config.h"
 #include "world.h"
+#include "window.h"
 
 using namespace std;
 
@@ -154,15 +155,9 @@ int main(int argc, char *argv[])
 	if (tx_found) cnfg->setX(tx_l, tx_h);
 	if (ty_found) cnfg->setY(ty_l, ty_h);
 
-	// Override window ranges
-	if (wx_found) {
-		if (wx_l < tx_l) wx_l = tx_l;
-		if (wx_h > tx_h) wx_h = tx_h;
-	}
-	if (wy_found) {
-		if (wy_l < ty_l) wy_l = ty_l;
-		if (wy_h > ty_h) wy_h = ty_h;
-	}
+	// Set window ranges
+	if (!wx_found) { wx_l = cnfg->getXL(); wx_h = cnfg->getXH(); }
+	if (!wy_found) { wy_l = cnfg->getYL(); wy_h = cnfg->getYH(); }
 
 	/*
 	// Debugging
@@ -183,7 +178,9 @@ int main(int argc, char *argv[])
 		w.next_gen();
 
 	// Write output file
-	w.print_gen(isASCII);
+	//w.print_gen(isASCII);
+	window win(wx_l, wx_h, wy_l, wy_h);
+	win.print_world(w, isASCII);
 
 	return 0;
 }

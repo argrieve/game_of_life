@@ -60,15 +60,15 @@ void world::next_gen()
 	return;
 }
 
-// Input is screen space coordinates
-int world::get_cell(unsigned int x, unsigned int y)
+// Input is cartesian coordinates
+int world::get_cell(int x, int y)
 {
-	if (x >= width) return -1;
-	if (y >= height) return -1;
-	return cells[x][y];
+	int scr_x = to_screen_x(x);
+	int scr_y = to_screen_y(y);
+	return cells[scr_x][scr_y];
 }
 
-void world::print_gen(bool ascii)
+void world::print_world(bool ascii)
 {
 	// Print ASCII representation
 	if (ascii) {

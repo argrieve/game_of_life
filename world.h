@@ -20,8 +20,8 @@ class world {
 		inline int get_anchor_x() { return anchor_x; }
 		inline int get_anchor_y() { return anchor_y; }
 		void next_gen();
-		int get_cell(unsigned int x, unsigned int y);
-		void print_gen(bool ascii);
+		int get_cell(int x, int y);
+		void print_world(bool ascii);
 	private:
 		void update_world();
 		void update_cell(int x, int y);
