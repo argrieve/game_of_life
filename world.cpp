@@ -39,6 +39,9 @@ world::world(config &cnfg)
 	vector<int> alive = cnfg.getAlive();	
 	int x, y;
 	for (int i=0; i<alive.size(); i+=2) {
+		// Make sure alive cell is in the terrain size
+		if (alive[i] < cnfg.getXL() || alive[i] > cnfg.getXH()) continue;
+		if (alive[i+1] < cnfg.getYL() || alive[i+1] > cnfg.getYH()) continue;
 		x = to_screen_x(alive[i]);
 		y = to_screen_y(alive[i+1]);
 		cells[x][y] = 1;
@@ -55,6 +58,14 @@ void world::next_gen()
 	update_world();
 
 	return;
+}
+
+// Input is screen space coordinates
+int world::get_cell(unsigned int x, unsigned int y)
+{
+	if (x >= width) return -1;
+	if (y >= height) return -1;
+	return cells[x][y];
 }
 
 void world::print_gen(bool ascii)

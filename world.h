@@ -15,8 +15,13 @@ class world {
 	public:
 		world(config &cnfg);
 		//~world();
-		void next_gen();
 		inline unsigned int curr_gen() { return gen; }
+		inline unsigned int get_width() { return width; }
+		inline unsigned int get_height() { return height; }
+		inline int get_anchor_x() { return anchor_x; }
+		inline int get_anchor_y() { return anchor_y; }
+		void next_gen();
+		int get_cell(unsigned int x, unsigned int y);
 		void print_gen(bool ascii);
 	private:
 		void update_world();
