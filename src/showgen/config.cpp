@@ -8,6 +8,7 @@
 
 #include "config.h"
 #include <iostream>
+#include "stdio.h"
 
 using namespace std;
 
@@ -104,12 +105,12 @@ void config::set_chars(char d, char a)
  */
 void config::set_colors(int dr, int dg, int db, int ar, int ag, int ab)
 {
-	color_dead[0] = (char)dr;
-	color_dead[1] = (char)dg;
-	color_dead[2] = (char)db;
-	color_alive[0] = (char)ar;
-	color_alive[1] = (char)ag;
-	color_alive[2] = (char)ab;
+	color_dead[0] = (unsigned char)dr;
+	color_dead[1] = (unsigned char)dg;
+	color_dead[2] = (unsigned char)db;
+	color_alive[0] = (unsigned char)ar;
+	color_alive[1] = (unsigned char)ag;
+	color_alive[2] = (unsigned char)ab;
 }
 
 /*
@@ -170,10 +171,15 @@ void config::print()
 	cout << "CONFIG:\n";
 	cout << "Name \"" << name << "\";\n";
 	cout << "Chars " << (int)*dead << ", " << (int)*alive << ";\n";
-	cout << "Colors (";
-	cout << (int)color_dead[0] << ", " << (int)color_dead[1] << ", " << (int)color_dead[2] << "), ";
-	cout << "(" << (int)color_alive[0] << ", " << (int)color_alive[1] << ", " << (int)color_alive[2];
-	cout << ");\n";
+	unsigned char r = color_dead[0];
+	unsigned char g = color_dead[1];
+	unsigned char b = color_dead[2];
+	printf("Colors (%d, %d, %d)", r, g, b);
+	r = color_alive[0];
+	g = color_alive[1];
+	b = color_alive[2];
+	printf(", (%d, %d, %d);\n", r, g, b);
+
 	cout << "Xrange: " << *range_xl << " to " << *range_xh << "\n";
 	cout << "Yrange: " << *range_yl << " to " << *range_yh << "\n";
 	for (int i=0; i<alive_cells.size(); i+=2)

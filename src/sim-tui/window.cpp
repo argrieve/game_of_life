@@ -8,7 +8,6 @@
 
 #include "window.h"
 #include <iostream>
-#include "stdio.h"
 
 using namespace std;
 
@@ -86,24 +85,6 @@ void window::print_aut(world &w)
 	// Print generation number as a comment
 	cout << "#\n" << "# Generation: " << w.curr_gen() << "\n#\n"; 
 	
-	// Print the name
-	cout << "Name \"" << w.get_name() << "\"\n";
-
-	// Print dead/alive characters
-	cout << "Chars " << (int)w.get_dead_char() << ", " << (int)w.get_alive_char() << ";\n";
-
-	// Print colors
-	char *ptr = w.get_dead_color();
-	unsigned char r = ptr[0];
-	unsigned char g = ptr[1];
-	unsigned char b = ptr[2];
-	printf("Colors (%d, %d, %d)", r, g, b);
-	ptr = w.get_alive_color();
-	r = ptr[0];
-	g = ptr[1];
-	b = ptr[2];
-	printf(", (%d, %d, %d);\n", r, g, b);
-
 	// Determine if window is inside terrain or outside
 	int x_start, x_end;
 	int y_start, y_end;

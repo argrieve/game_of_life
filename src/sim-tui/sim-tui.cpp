@@ -165,6 +165,7 @@ int main(int argc, char *argv[])
 	// Draw the window (gen 0)
 	draw_window(rows, cols, w, delay);
 
+	// Main curses control loop
 	bool done = false;
 	while(!done) {
 		char c = (char)getch();
@@ -172,6 +173,48 @@ int main(int argc, char *argv[])
 			case 'Q':
 			case 'q':
 				done = true;
+				break;
+			case 'S':
+			case 's':
+				w.next_gen();	
+				draw_window(rows, cols, w, delay);
+				break;
+			case '=':
+			case '+':
+				delay += 10;
+				draw_window(rows, cols, w, delay);
+				break;
+			case '_':
+			case '-':
+				delay -= 10;
+				draw_window(rows, cols, w, delay);
+				break;
+			case 'P':
+			case 'p':
+				bool pdone = false;
+				while (!pdone) {
+					timeout(delay);
+					w.next_gen();
+					draw_window(rows, cols, w, delay);
+					char cc = (char)getch();
+					switch (cc) {
+						case 'P':
+						case 'p':
+							pdone = true;
+							break;
+					case '=':
+					case '+':
+						delay += 10;
+						draw_window(rows, cols, w, delay);
+						break;
+					case '_':
+					case '-':
+						delay -= 10;
+						draw_window(rows, cols, w, delay);
+						break;
+					}
+				}
+
 		};
 	}
 

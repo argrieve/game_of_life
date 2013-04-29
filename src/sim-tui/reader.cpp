@@ -125,11 +125,18 @@ void reader::set_chars(config &cnfg)
 	if (indx1 == string::npos) return;
 
 	// Locate the alive/dead characters
-	indx1 = data.find(",", indx1+1);
 	int indx2 = data.find(";", indx1+1);
 	
+	// Parse the ASCII values
+	string str(data.substr(indx1+6, indx2-indx1));
+	str.erase(str.find(";"), 1);
+	str.erase(str.find(","), 1);
+	istringstream stream(str);
+	int one, two;
+	stream >> one >> two;	
+
 	// Save to config
-	cnfg.set_chars(data.at(indx1-1), data.at(indx2-1));
+	cnfg.set_chars((char)one, (char)two);
 }
 
 /*
