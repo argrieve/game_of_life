@@ -150,36 +150,29 @@ void reader::set_colors(config &cnfg)
 	int indx1 = data.find("Colors");
 	if (indx1 == string::npos) return;
 	
+	// Find dead RGB
 	indx1 = data.find("(", indx1+1);
-	int indx2 = data.find(",", indx1+1);
+	int indx2 = data.find(")", indx1+1);
+	string str1(data.substr(indx1+1, indx2-indx1-1));
+	str1.erase(str1.find(","),1);
+	str1.erase(str1.find(","),1);
 
 	// Parse dead RGB
 	int dr, dg, db;
-	istringstream s1(data.substr(indx1+1, indx2-indx1-1));
-	s1 >> dr;
-	indx1 = indx2;
-	indx2 = data.find(",", indx1+1);
-	istringstream s2(data.substr(indx1+1, indx2-indx1-1));
-	s2 >> dg;
-	indx1 = indx2;
-	indx2 = data.find(")", indx1+1);
-	istringstream s3(data.substr(indx1+1, indx2-indx1-1));
-	s3 >> db;
+	istringstream stream(str1);
+	stream >> dr >> dg >> db;
+
+	// Find alive RGB
+	indx1 = data.find("(",indx1+1);
+	indx2 = data.find(")",indx1+1);
+	string str2(data.substr(indx1+1, indx2-indx1-1));
+	str2.erase(str2.find(","),1);
+	str2.erase(str2.find(","),1);
 
 	// Parse alive RGB
 	int ar, ag, ab;
-	indx1 = data.find("(", indx2+1);
-	indx2 = data.find(",", indx1+1);
-	istringstream s4(data.substr(indx1+1, indx2-indx1-1));
-	s4 >> ar;
-	indx1 = indx2;
-	indx2 = data.find(",", indx1+1);
-	istringstream s5(data.substr(indx1+1, indx2-indx1-1));
-	s5 >> ag;
-	indx1 = indx2;
-	indx2 = data.find(")", indx1+1);
-	istringstream s6(data.substr(indx1+1, indx2-indx1-1));
-	s6 >> ab;
+	istringstream stream2(str2);
+	stream2 >> ar >> ag >> ab;
 
 	// Save to config
 	cnfg.set_colors(dr, dg, db, ar, ag, ab);

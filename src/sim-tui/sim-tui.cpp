@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 	int rows, cols;
 	getmaxyx(stdscr, rows, cols);
 	rows--; cols--;
-	int delay = 500;
+	int delay = 250;
 
 	// Draw the window (gen 0)
 	draw_window(rows, cols, w, delay);
@@ -168,8 +168,9 @@ int main(int argc, char *argv[])
 	// Main curses control loop
 	bool done = false;
 	while(!done) {
-		char c = (char)getch();
+		int c = getch();
 		switch (c) {
+			case ERR: continue;
 			case 'Q':
 			case 'q':
 				done = true;
@@ -196,24 +197,31 @@ int main(int argc, char *argv[])
 					timeout(delay);
 					w.next_gen();
 					draw_window(rows, cols, w, delay);
-					char cc = (char)getch();
+					int cc = getch();
 					switch (cc) {
+						case ERR: continue;
 						case 'P':
 						case 'p':
 							pdone = true;
 							break;
-					case '=':
-					case '+':
-						delay += 10;
-						draw_window(rows, cols, w, delay);
-						break;
-					case '_':
-					case '-':
-						delay -= 10;
-						draw_window(rows, cols, w, delay);
-						break;
+						case '=':
+						case '+':
+							delay += 10;
+							draw_window(rows, cols, w, delay);
+							break;
+						case '_':
+						case '-':
+							delay -= 10;
+							draw_window(rows, cols, w, delay);
+							break;
+						case 'Q':
+						case 'q':
+							pdone = true;
+							done = true;
+							break;
 					}
 				}
+				break;
 
 		};
 	}
