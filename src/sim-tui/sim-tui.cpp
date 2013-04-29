@@ -185,6 +185,22 @@ int main(int argc, char *argv[])
 		int c = getch();
 		switch (c) {
 			case ERR: continue;
+			case KEY_UP:
+				win.scroll_up();
+				draw_window(rows, cols, w, win, delay);
+				break;
+			case KEY_DOWN:
+				win.scroll_down();
+				draw_window(rows, cols, w, win, delay);
+				break;
+			case KEY_LEFT:
+				win.scroll_left();
+				draw_window(rows, cols, w, win, delay);
+				break;
+			case KEY_RIGHT:
+				win.scroll_right();
+				draw_window(rows, cols, w, win, delay);
+				break;
 			case 'Q':
 			case 'q':
 				done = true;
@@ -201,7 +217,7 @@ int main(int argc, char *argv[])
 				break;
 			case '_':
 			case '-':
-				delay -= 10;
+				if (delay-10 >= 0) delay -= 10;
 				draw_window(rows, cols, w, win, delay);
 				break;
 			case 'P':
@@ -225,7 +241,7 @@ int main(int argc, char *argv[])
 							break;
 						case '_':
 						case '-':
-							delay -= 10;
+							if(delay-10 >= 0) delay -= 10;
 							draw_window(rows, cols, w, win, delay);
 							break;
 						case 'Q':
@@ -236,7 +252,6 @@ int main(int argc, char *argv[])
 					}
 				}
 				break;
-
 		};
 	}
 
