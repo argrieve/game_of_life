@@ -30,6 +30,11 @@ using namespace std;
 /*											FUNCTION PROTOTYPES												 */
 /*******************************************************************/
 
+void draw_window(int rows, int cols, world &w, int delay);
+void draw_labels(int rows, int cols, const char *name, int gen, int delay);
+void draw_border(int rows, int cols);
+void draw_cells(int rows, int cols, world &w);
+
 /*
  * Parses a coordinate pair out of a string or a pair of strings (if
  * the coordinate pair is seperated by a space instead of a comma.)
@@ -145,14 +150,106 @@ int main(int argc, char *argv[])
 	// Build world
 	world w(*cnfg);
 
-	// Perform specified number of generations
-	for (int i=0; i<num_gens; i++)
-		w.next_gen();
+	// Begin NCURSES
+	initscr();
+  noecho();
+	cbreak();
+	keypad(stdscr, 1);
+	
+	// Window variables
+	int rows, cols;
+	getmaxyx(stdscr, rows, cols);
+	rows--; cols--;
+	int delay = 500;
 
+	// Draw the window (gen 0)
+	draw_window(rows, cols, w, delay);
+
+	bool done = false;
+	while(!done) {
+		char c = (char)getch();
+		switch (c) {
+			case 'Q':
+			case 'q':
+				done = true;
+		};
+	}
+
+	endwin();
 	return 0;
 }
 
+void draw_window(int rows, int cols, world &w, int delay)
+{
+	draw_labels(rows, cols, w.get_name().c_str(), w.curr_gen(), delay);
+	draw_border(rows, cols);
+	draw_cells(rows, cols, w);
+	curs_set(0);
+	refresh();
+}
 
+void draw_labels(int rows, int cols, const char *name, int gen, int delay)
+{
+	mvprintw(0, (cols-strlen(name))/2, "%s", name);
+	mvprintw(1, 0, "Delay: %6d (+/-)", delay);	
+	mvprintw(1, cols-(strlen("Generation")+10), "%s %10d", "Generation", gen);
+	mvprintw(rows, 0, "(Q)uit");
+	mvprintw(rows, cols/3-2, "(P)lay");
+	mvprintw(rows, cols/2+cols/8, "(S)tep");
+	mvprintw(rows, cols-strlen("Arrows:scroll"), "Arrows:scroll");
+
+}
+void draw_border(int rows, int cols)
+{
+	mvprintw(2,0,"+");
+	for (int i=3; i<rows-1; i++) {
+		mvprintw(i,0,"|");
+		mvprintw(i,cols,"|");
+	}
+	mvprintw(rows-1,0,"+");	
+	for (int i=1; i<cols; i++) {
+		mvprintw(2,i,"-");
+		mvprintw(rows-1,i,"-");
+	}
+	mvprintw(rows-1,cols,"+");
+	mvprintw(2,cols,"+");
+	return;
+}
+
+void draw_cells(int rows, int cols, world &w)
+{
+	// Cell state/character variables
+	char d = w.get_dead_char();
+	char a = w.get_alive_char();
+	char c;
+
+	// Cell indexing variables
+	int start_x = w.get_anchor_x();
+	int start_y = w.get_anchor_y();
+	int end_x = start_x + w.get_width();
+	int end_y = start_y - w.get_height();
+
+	// Windowing position variables
+	int curr_row; //denotes 'y'
+	int curr_col; //denotes 'x'
+	
+	// Loop through and get all cells
+	curr_row = 3;
+	for (int i=start_y; i>end_y; i--) {
+		curr_col = 1;
+		for (int j=start_x; j<end_x; j++) {
+			// Set the character to print	
+			if (w.get_cell(j,i)) c=a; else c=d;
+			mvaddch(curr_row, curr_col, c);
+			curr_col++;
+			if (curr_col >= cols-1) break;
+		}
+		curr_row++;
+		if (curr_row > rows-2) break;
+	}
+
+	return;
+}
 
 /*******************************************************************/
 /*														FUNCTIONS													 	*/
@@ -196,25 +293,21 @@ bool parse_lh(char *in1, char *in2, int *low, int *high)
 void show_help()
 {
 	// Program description
-	cout << "\nSHOWGEN\n\n";
+	cout << "\nSIM-TUI\n\n";
 	cout << "\tThis program performs a simple simulation of John Conway's\n";
 	cout << "\tGame of Life. A .aut file is read (either as an argument or\n";
 	cout << "\tredirected from stdin) and used as a starting generation for\n";
-	cout << "\tthe simulation. The world is updated by a specified number of\n";
-	cout << "\tgenerations (see SWITCHES section), and the resulting state\n";
-	cout << "\tof the world is written to stdout.\n";
-
+	cout << "\tthe simulation. The current generation is displayed in the\n";
+	cout << "\tterminal, and the generations can be controlled by the user.\n";
+	cout << "\t(see CONTROLS section.)\n";
+	
 	// Usage information
 	cout << "\n\nUSAGE\n\n";
-	cout << "\t./showgen [-f <file>] [options]\n";
-	cout << "\t./showgen [options] < <file>\n";
+	cout << "\t./sim-tui [-f <file>] [options]\n";
+	//cout << "\t./sim-tui [options] < <file>\n";
 
 	// Legal switches
 	cout << "\n\nSWITCHES\n\n";
-	cout << "\t-a \tOutput in .aut format.\n\n";	
-	cout << "\t-g \tSpecify the desired number of generations. Switch should\n";	
-	cout << "\t   \tbe followed by a positive integer. If omitted, the number\n";	
-	cout << "\t   \tof generations is zero.\n\n";	
 	cout << "\t-h \tDisplay help and information.\n\n";
 	cout << "\t-f \tSpecify a .aut file to read from. Filename must immediately\n";
 	cout << "\t   \tfollow the switch.\n\n";
@@ -224,10 +317,11 @@ void show_help()
 	cout << "\t   \tfound in the .aut file.\n\n";
 	cout << "\t-ty\tSet the y-range of the terrain. See switch '-tx' for more\n";
 	cout << "\t   \tinformation.\n\n";
-	cout << "\t-wx\tSet the x-range of the output window. Switch should be \n";
-	cout << "\t   \tfollowed by a coordinate pair, where each coordinate is \n";
-	cout << "\t   \tseperated by a comma or a space. If omitted, the window\n";
-	cout << "\t   \tdefaults to the x-range of the terrain.\n\n";
-	cout << "\t-wy\tSet the y-range of the output window. See switch '-wx' for\n";
-	cout << "\t   \tmore information.\n\n";
+
+	// Controls
+	cout << "\n\nCONTROLS\n\n";
+	cout << "\t  q \tbleh\n\n";
+	cout << "\t  p \tbleh\n\n";
+	cout << "\t  s \tbleh\n\n";
+	cout << "\tArrow\tbleh\n\n";
 }
