@@ -1,8 +1,19 @@
+/*
+ * ComS 229 Project 2: showgen
+ * Spring 2013
+ * Alex Grieve
+ *
+ * config.cpp
+ */
+
 #include "config.h"
 #include <iostream>
 
 using namespace std;
 
+/*
+ * Reserve space for all member variables. Initialize to zero.
+ */ 
 config::config()
 {
 	range_xl = new int;
@@ -27,6 +38,9 @@ config::config()
 	color_alive[2] = 0;
 }
 
+/*
+ * Free space allocated for member variables.
+ */
 config::~config()
 {
 	delete range_xl;
@@ -39,28 +53,55 @@ config::~config()
 	delete[] color_alive;
 }
 
+/*
+ * RETURN: The array of RGB colors for dead cells.
+ */
 char* config::get_dead_colors()
 {
 	return color_dead;
 }
 
+/*
+ * RETURN: The array of RGB colors for alive cells.
+ */
 char* config::get_alive_colors()
 {
 	return color_alive;
 }
 
+/*
+ * Set the name of the simulation.
+ *
+ * INPUT: *str Name of the simulation.
+ */
 void config::set_name(const char* str)
 {
 	name.clear();
 	name = str;
 }
 
+/*
+ * Set the characters for alive/dead cells.
+ *
+ * INPUT: d Character representing a dead cell.
+ * INPUT: a Character representing an alive cell.
+ */
 void config::set_chars(char d, char a)
 {
 	*dead = d;
 	*alive = a;
 }
 
+/*
+ * Set the colors for alive and dead cells.
+ *
+ * INPUT: dr Dead cell red componet
+ * INPUT: dg Dead cell green component
+ * INPUT: db Dead cell blue component
+ * INPUT: ar Alive cell red componet
+ * INPUT: ag Alive cell green component
+ * INPUT: ab Alive cell blue component
+ */
 void config::set_colors(int dr, int dg, int db, int ar, int ag, int ab)
 {
 	color_dead[0] = (char)dr;
@@ -71,6 +112,12 @@ void config::set_colors(int dr, int dg, int db, int ar, int ag, int ab)
 	color_alive[2] = (char)ab;
 }
 
+/*
+ * Set the XRange for the simulation
+ *
+ * INPUT: _l Lower value of the range
+ * INPUT: _H Upper value of the range
+ */
 void config::setX(int _l, int _h)
 {
 	// Correct backwards parameters
@@ -84,6 +131,12 @@ void config::setX(int _l, int _h)
 	}
 }
 
+/*
+ * Set the YRange for the simulation
+ *
+ * INPUT: _l Lower value of the range
+ * INPUT: _H Upper value of the range
+ */
 void config::setY(int _l, int _h)
 {
 	// Correct backwards parameters
@@ -97,13 +150,21 @@ void config::setY(int _l, int _h)
 	}
 }
 
+/*
+ * Add a cell to the initial 'alive cells' list.
+ *
+ * INPUT: _x X-coordinate of the alive cell
+ * INPUT: _y Y-coordinate of the alive cell
+ */
 void config::add(int _x, int _y) 
 {
 	alive_cells.push_back(_x);
 	alive_cells.push_back(_y);
 }
 
-// For debugging
+/*
+ * Print the attrivutes of the config file for debugging.
+ */
 void config::print()
 {
 	cout << "CONFIG:\n";

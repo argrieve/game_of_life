@@ -1,3 +1,20 @@
+/*
+ * ComS 229 Project 2: showgen
+ * Spring 2013
+ * Alex Grieve
+ *
+ * showgen.cpp
+ *
+ * Compile with Makefile: make
+ * Alternatively, compile with the following commands:
+ *  g++ -c window.cpp
+ *  g++ -c reader.cpp
+ *  g++ -c world.cpp
+ *  g++ -c config.cpp
+ *  g++ -c showgen.cpp
+ *  g++ -o showgen showgen.o config.o world.o reader.o window.o 
+ */
+
 #include <stdlib.h>
 #include <iostream>
 #include <sstream>
@@ -10,9 +27,32 @@
 
 using namespace std;
 
+/*******************************************************************/
+/*											FUNCTION PROTOTYPES												 */
+/*******************************************************************/
+
+/*
+ * Parses a coordinate pair out of a string or a pair of strings (if
+ * the coordinate pair is seperated by a space instead of a comma.)
+ *
+ * INPUT: *in1 First portion of the command string
+ * INPUT: *in2 Second portion of the command string
+ * INPUT: *low Place to store the lower coordinate
+ * INPUT: *high Place to store the higher coordinate
+ * RETURN: True if a valid coordinate pair was parsed, false otherwise
+ */
 bool parse_lh(char *in1, char *in2, int *low, int *high);
+
+/*
+ * Show the program help and information.
+ */
 void show_help();
 
+
+
+/*******************************************************************/
+/*													PROGRAM MAIN													*/
+/*******************************************************************/
 int main(int argc, char *argv[]) 
 {
 	// Store values of command line args
@@ -158,19 +198,6 @@ int main(int argc, char *argv[])
 	// Set window ranges
 	if (!wx_found) { wx_l = cnfg->getXL(); wx_h = cnfg->getXH(); }
 	if (!wy_found) { wy_l = cnfg->getYL(); wy_h = cnfg->getYH(); }
-	
-	cnfg->print();
-
-	/*
-	// Debugging
-	cout << "isASCII: " << isASCII << '\n';
-	cout << "filename: " << filename << '\n';
-	cout << "gens: " << num_gens << '\n';
-	cout << "tx: " << tx_l << " to " << tx_h << '\n';
-	cout << "ty: " << ty_l << " to " << ty_h << '\n';
-	cout << "wx: " << wx_l << " to " << wx_h << '\n';
-	cout << "wy: " << wy_l << " to " << wy_h << '\n';
-	*/
 
 	// Build world
 	world w(*cnfg);
@@ -180,13 +207,28 @@ int main(int argc, char *argv[])
 		w.next_gen();
 
 	// Write output file
-	//w.print_gen(isASCII);
 	window win(wx_l, wx_h, wy_l, wy_h);
 	win.print_world(w, isASCII);
 
 	return 0;
 }
 
+
+
+/*******************************************************************/
+/*														FUNCTIONS													 	*/
+/*******************************************************************/
+
+/*
+ * Parses a coordinate pair out of a string or a pair of strings (if
+ * the coordinate pair is seperated by a space instead of a comma.)
+ *
+ * INPUT: *in1 First portion of the command string
+ * INPUT: *in2 Second portion of the command string
+ * INPUT: *low Place to store the lower coordinate
+ * INPUT: *high Place to store the higher coordinate
+ * RETURN: True if a valid coordinate pair was parsed, false otherwise
+ */
 bool parse_lh(char *in1, char *in2, int *low, int *high)
 {
 	// Build string object
@@ -209,6 +251,9 @@ bool parse_lh(char *in1, char *in2, int *low, int *high)
 	return true;
 }
 
+/*
+ * Show the program help and information.
+ */
 void show_help()
 {
 	// Program description
@@ -244,6 +289,4 @@ void show_help()
 	cout << "\t   \tdefaults to the x-range of the terrain.\n\n";
 	cout << "\t-wy\tSet the y-range of the output window. See switch '-wx' for\n";
 	cout << "\t   \tmore information.\n\n";
-
-
 }

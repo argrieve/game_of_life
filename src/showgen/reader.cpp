@@ -1,3 +1,11 @@
+/*
+ * ComS 229 Project 2: showgen
+ * Spring 2013
+ * Alex Grieve
+ *
+ * reader.cpp
+ */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -6,11 +14,18 @@
 
 using namespace std;
 
-reader::reader()
-{
-//	data = new string(""); 
-}
+/*
+ * Default constructor
+ */
+reader::reader() 
+{ }
 
+/*
+ * Parse a file and store attributes in a config class/file.
+ *
+ * INPUT: &cnfg Config class to store attributes in
+ * INPUT: *fname File name of the .aut file
+ */
 void reader::read(config &cnfg, char *fname)
 {
 	// Read from the appropriate location
@@ -49,6 +64,9 @@ void reader::read(config &cnfg, char *fname)
 	return;
 }
 
+/*
+ * Removes comments from a .aut file (makes parsing easier)
+ */
 void reader::remove_comments()
 {
 	int indx1, indx2;
@@ -68,6 +86,13 @@ void reader::remove_comments()
 	return;
 }
 
+/*
+ * Sets the name of the simulation. If no name is specified in
+ * the .aut file, the .aut filename is used instead.
+ * 
+ * INPUT: &cnfg Config class to store name
+ * INPUT: *fname Name of the .aut file
+ */
 void reader::set_name(config &cnfg, char *fname)
 {
 	// Find the name keyword
@@ -82,13 +107,17 @@ void reader::set_name(config &cnfg, char *fname)
 	int indx2 = data.find("\"", indx1+1);
 
 	// Parse the name out
-	//cout << data.substr(indx1+1, indx2-indx1-1).c_str() << endl;
 	const char *name = data.substr(indx1+1, indx2-indx1-1).c_str();
 
 	// Save to config
 	cnfg.set_name(name);
 }
 
+/*
+ * Sets the characters used to represent alive and dead cells.
+ *
+ * INTPUT: &cnfg Config file to store characters
+ */
 void reader::set_chars(config &cnfg)
 {
 	// Check for the Chars keyword
@@ -103,6 +132,11 @@ void reader::set_chars(config &cnfg)
 	cnfg.set_chars(data.at(indx1-1), data.at(indx2-1));
 }
 
+/*
+ * Sets the colors used to represent alive and dead cells.
+ *
+ * INPUT: &cnfg Config file to store characters
+ */
 void reader::set_colors(config &cnfg)
 {
 	// Check for the Colors keyword
@@ -142,12 +176,14 @@ void reader::set_colors(config &cnfg)
 
 	// Save to config
 	cnfg.set_colors(dr, dg, db, ar, ag, ab);
-
-	//cout << "Dead colors: " << dr << ", " << dg << ", " << db << endl;
-	//cout << "Alive colors: " << ar << ", " << ag << ", " << ab << endl;
-	
 }
 
+/*
+ * Set the range of the simulation.
+ *
+ * INPUT: &cnfg Config file to store ranges to
+ * INPUT: c Character to indicate whether to parse X or Y coordinates
+ */
 void reader::set_range(config &cnfg, char c)
 {
 	// Find the range keyword
@@ -170,6 +206,11 @@ void reader::set_range(config &cnfg, char c)
 	return;
 }
 
+/*
+ * Set the initial 'alive' cells.
+ * 
+ * INPUT: &cnfg Config file to store initial 'alive' cells
+ */
 void reader::set_living(config &cnfg)
 {
 	int start, end;
@@ -203,7 +244,6 @@ void reader::set_living(config &cnfg)
 					while (1) {
 						if (isdigit(stream.peek()) || stream.peek() == '-') {
 							stream >> x;	
-							//cout << "( " << y << ", " << x << ")" << endl;
 							cnfg.add(x, y);
 						}
 						else if (stream.peek() == ';') break;

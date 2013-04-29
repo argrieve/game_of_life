@@ -1,8 +1,22 @@
+/*
+ * ComS 229 Project 2: showgen
+ * Spring 2013
+ * Alex Grieve
+ *
+ * world.cpp
+ */
+
 #include "world.h"
 #include <iostream>
 
 using namespace std;
 
+/*
+ * Initializes world's properties with values from
+ * the specified config class/file.
+ *
+ * INPUT: &cnfg Config file that contains information from .aut file
+ */
 world::world(config &cnfg)
 {
 	// Grab the name
@@ -60,16 +74,29 @@ world::world(config &cnfg)
 	
 }
 
+/*
+ * Gets the color components for dead cells.
+ *
+ * RETURN: Pointer to array containing dead cell color
+ */
 char* world::get_dead_color()
 {
 	return dead_color;
 }
 
+/*
+ * Gets the color components for alive cells.
+ *
+ * RETURN: Pointer to array containing alive cell color
+ */
 char* world::get_alive_color()
 {
 	return alive_color;
 }
 
+/*
+ * Compute generation i+1 of the world.
+ */
 void world::next_gen()
 {
 	for(int i=0; i<width; i++)
@@ -81,7 +108,13 @@ void world::next_gen()
 	return;
 }
 
-// Input is cartesian coordinates
+/*
+ * Gets a cell's current state.
+ *
+ * INPUT: x Cartesian x-coordinate of the cell
+ * INPUT: y Cartesian y-coordinate of the cell
+ * RETURN: Cell's state (0=dead, 1=alive)
+ */
 int world::get_cell(int x, int y)
 {
 	int scr_x = to_screen_x(x);
@@ -89,6 +122,11 @@ int world::get_cell(int x, int y)
 	return cells[scr_x][scr_y];
 }
 
+/*
+ * Prints the world in the specified format to stdout.
+ *
+ * INPUT: ascii If true, print the world in ASCII format, .aut format otherwise
+ */
 void world::print_world(bool ascii)
 {
 	// Print ASCII representation
@@ -127,6 +165,9 @@ void world::print_world(bool ascii)
 	}
 }
 
+/*
+ * Sets the current state of the world to generation i+1
+ */
 void world::update_world()
 {
 	for (int i=0; i<width; i++)
@@ -138,6 +179,12 @@ void world::update_world()
 	return;
 }
 
+/* 
+ * Update a current cell's state in generation i+1
+ *
+ * INPUT: x Cartesian x-coordinate of the cell
+ * INPUT: y Cartesian y-coordinate of the cell
+ */
 void world::update_cell(int x, int y)
 {
 	int neighbors = count_neighbors(x, y);
@@ -161,6 +208,13 @@ void world::update_cell(int x, int y)
 	return;
 }
 
+/*
+ * Counts the number of alive neighbors immediately touching a cell.
+ *
+ * INPUT: x Cartesian x-coordinate of the cell
+ * INPUT: y Cartesian y-coordinate of the cell
+ * RETURN: Number of neighbors the cell has
+ */
 int world::count_neighbors(int x, int y)
 {
 	// Alive neighbor count
@@ -192,6 +246,12 @@ int world::count_neighbors(int x, int y)
 	return count;
 }
 
+/*
+ * Converts a cartesian x-coordinate into a screen coordinate
+ *
+ * INPUT: _x Cartesian x-coordinate
+ * RETURN: Screen space x-coordinate
+ */
 int world::to_screen_x(int _x)
 {
 	int screen_x = 0;
@@ -201,6 +261,12 @@ int world::to_screen_x(int _x)
 	return screen_x;
 }
 
+/*
+ * Converts a cartesian y-coordinate into a screen coordinate
+ *
+ * INPUT: _y Cartesian y-coordinate
+ * RETURN: Screen space y-coordinate
+ */
 int world::to_screen_y(int _y)
 {
 	int screen_y = 0;
@@ -210,6 +276,11 @@ int world::to_screen_y(int _y)
 	return screen_y;
 }
 
+/*
+ * Prints a column that contains alive cells in .aut format
+ *
+ * INPUT: y Column number to print
+ */
 void world::print_col(int y)
 {
 	cout << "  Y = " << y << " :   ";

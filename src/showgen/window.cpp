@@ -1,8 +1,19 @@
+/*
+ * ComS 229 Project 2: showgen
+ * Spring 2013
+ * Alex Grieve
+ *
+ * window.cpp
+ */
+
 #include "window.h"
 #include <iostream>
 
 using namespace std;
 
+/*
+ * Constructor that intializes the X and Y window ranges
+ */
 window::window(int wx_l, int wx_h, int wy_l, int wy_h)
 {
 	width = 0;
@@ -15,12 +26,14 @@ window::window(int wx_l, int wx_h, int wy_l, int wy_h)
 	// Set y anchor and height
 	anchor_y = wy_h;
 	for (int i=wy_l; i<=anchor_y; i++) height++;
-
-	//cout << "anchors: " << anchor_x << ", " << anchor_y << endl;
-	//cout << "width: " << width << endl;
-	//cout << "height: " << height << endl;
 }
 
+/*
+ * Print the world in the specified format to stdout
+ *
+ * INPUT: &w World class to print
+ * INPUT: ascii Output in ASCII format if true, otherwise .aut format
+ */
 void window::print_world(world &w, bool ascii)
 {
 	// Print ASCII representation
@@ -32,6 +45,11 @@ void window::print_world(world &w, bool ascii)
 	return;
 }
 
+/*
+ * Print the world in ASCII format
+ *
+ * INPUT: &w World class to print
+ */
 void window::print_ascii(world &w)
 {
 	// Determine terrain's cartesian coordinates
@@ -39,11 +57,6 @@ void window::print_ascii(world &w)
 	int ter_x_end = ter_x_start + w.get_width() - 1;
 	int ter_y_start = w.get_anchor_y();
 	int ter_y_end = ter_y_start - w.get_height() + 1;
-	
-	//cout<< "ter_x_start: " << ter_x_start << endl;
-	//cout<< "ter_x_end  : " << ter_x_end << endl;
-	//cout<< "ter_y_start: " << ter_y_start << endl;
-	//cout<< "ter_y_end  : " << ter_y_end << endl;
 
 	// Loop through window
 	for (int i=anchor_y; i>(int)(anchor_y-height); i--) {
@@ -62,6 +75,11 @@ void window::print_ascii(world &w)
 	}
 }
 
+/*
+ * Print the world in .aut format
+ *
+ * INPUT: &w World class to print
+ */
 void window::print_aut(world &w)
 {
 	// Print generation number as a comment
@@ -107,6 +125,14 @@ void window::print_aut(world &w)
 	return;
 }
 
+/*
+ * Print a column that has 'alive' cells in .aut format
+ *
+ * INPUT: &w World class to print
+ * INPUT: y Column number that contains alive cells
+ * INPUT: start_x X value to start searching at
+ * INPUT: end_x X value to stop searching at
+ */
 void window::print_col(world &w, int y, int start_x, int end_x)
 {
 	cout << "  Y = " << y << " :   ";
