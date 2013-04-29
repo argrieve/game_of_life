@@ -29,6 +29,10 @@ class window {
 		void scroll_down();
 		void scroll_left();
 		void scroll_right();
+		int get_vscroll_size();
+		int get_hscroll_size();
+		int get_vscroll_pos();
+		int get_hscroll_pos();
 };
 
 #endif

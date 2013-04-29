@@ -35,6 +35,7 @@ using namespace std;
 void draw_window(int rows, int cols, world &w, window &win, int delay);
 void draw_labels(int rows, int cols, const char *name, int gen, int delay);
 void draw_border(int rows, int cols);
+void draw_scrollbars(int rows, int cols, window &win);
 void draw_cells(world &w, window &win);
 
 /*
@@ -263,6 +264,7 @@ void draw_window(int rows, int cols, world &w, window &win, int delay)
 {
 	draw_labels(rows, cols, w.get_name().c_str(), w.curr_gen(), delay);
 	draw_border(rows, cols);
+	draw_scrollbars(rows, cols, win);
 	draw_cells(w, win);
 	curs_set(0);
 	refresh();
@@ -293,6 +295,34 @@ void draw_border(int rows, int cols)
 	}
 	mvprintw(rows-1,cols,"+");
 	mvprintw(2,cols,"+");
+	return;
+}
+
+void draw_scrollbars(int rows, int cols, window &win)
+{
+	int vsize = win.get_vscroll_size();
+	int hsize = win.get_hscroll_size();
+
+	// Draw vertical scroll bar
+	if (vsize != -1) {
+		// Place arrows
+		mvprintw(3,cols, "^");
+		mvprintw(rows-2,cols, "v");
+		// Place scroller
+		for (int i=0; i<vsize; i++) mvprintw(4+i,cols,"#");
+	}
+
+	// Draw horizontal scroll bar
+	if (hsize != -1) {
+		// Place arrows
+		mvprintw(rows-1, 1, "<");
+		mvprintw(rows-1, cols-1, ">");
+		//mvprintw(rows-3,1,"%d", win.get_width());
+		//mvprintw(rows-2,1,"%d", hsize);
+		// Place scroller
+		for (int i=0; i<hsize; i++) mvprintw(rows-1, 2+i, "#");
+	}
+
 	return;
 }
 

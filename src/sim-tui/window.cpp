@@ -69,3 +69,38 @@ void window::scroll_right()
 	if ((anchor_x+(width-1))+1 >= w.get_anchor_x()+w.get_width()) return;
 	anchor_x++;
 }
+
+int window::get_vscroll_size()
+{
+	// Don't need a scroll bar
+	if (height >= w.get_height()) return -1;
+
+	// 1 scroll character = X world chars
+	double step = (double)(height-2)/w.get_height();
+	
+	// Scrollbar size = step size*number of characters in the window
+	return (int)(step * height);
+}
+
+int window::get_hscroll_size()
+{
+	// Don't need a scroll bar
+	if (width >= w.get_width()) return -1;
+
+	// 1 scroll character = X world chars
+	double step = (double)(width-2)/w.get_width();
+	
+	// Scrollbar size = step size*number of characters in the window
+	return (int)(step * width);
+
+}
+
+int window::get_vscroll_pos()
+{
+	return -1;
+}
+
+int window::get_hscroll_pos()
+{
+	return -1;
+}
