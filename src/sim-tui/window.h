@@ -19,15 +19,16 @@ class window {
 	// Member variables
 	unsigned int width, height;
 	int anchor_x, anchor_y;
+	world &w;
 	public:
-		window(int wx_l, int wx_h, int wy_l, int wy_h);
-		// Main function called 
-		void print_world(world &w, bool ascii);
-	private:
-		// Helper functions, based on output type
-		void print_ascii(world &w);
-		void print_aut(world &w);
-		void print_col(world &w, int y, int start_x, int end_x);
+		window(int _width, int _height, world &wrld);
+		inline unsigned int get_width() { return width; }
+		inline unsigned int get_height() { return height; }
+		int get_cell(int x, int y);
+		void scroll_up();
+		void scroll_down();
+		void scroll_left();
+		void scroll_right();
 };
 
 #endif

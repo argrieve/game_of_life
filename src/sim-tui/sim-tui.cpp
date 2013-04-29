@@ -7,6 +7,7 @@
  *
  * Compile with Makefile: make
  * Alternatively, compile with the following commands:
+ *  g++ -c window.cpp
  *  g++ -c reader.cpp
  *  g++ -c world.cpp
  *  g++ -c config.cpp
@@ -23,6 +24,7 @@
 #include "config.h"
 #include "world.h"
 #include <curses.h>
+#include "window.h"
 
 using namespace std;
 
@@ -30,10 +32,10 @@ using namespace std;
 /*											FUNCTION PROTOTYPES												 */
 /*******************************************************************/
 
-void draw_window(int rows, int cols, world &w, int delay);
+void draw_window(int rows, int cols, world &w, window &win, int delay);
 void draw_labels(int rows, int cols, const char *name, int gen, int delay);
 void draw_border(int rows, int cols);
-void draw_cells(int rows, int cols, world &w);
+void draw_cells(world &w, window &win);
 
 /*
  * Parses a coordinate pair out of a string or a pair of strings (if
@@ -161,9 +163,21 @@ int main(int argc, char *argv[])
 	getmaxyx(stdscr, rows, cols);
 	rows--; cols--;
 	int delay = 250;
+	
+	window win(cols-2, rows-5, w);
+	/*
+	cout << "rows: " << rows << " " << "cols: " << cols << endl;
+	for (int i=0; i<win.get_height(); i++) {
+		for (int j=0; j<win.get_width(); j++) {
+			int ret = win.get_cell(j,i);
+			if (ret != -1)
+				printf("(%d,%d) : %d\n", j, i, ret);
+		}
+	}
+	*/
 
 	// Draw the window (gen 0)
-	draw_window(rows, cols, w, delay);
+	draw_window(rows, cols, w, win, delay);
 
 	// Main curses control loop
 	bool done = false;
@@ -178,17 +192,17 @@ int main(int argc, char *argv[])
 			case 'S':
 			case 's':
 				w.next_gen();	
-				draw_window(rows, cols, w, delay);
+				draw_window(rows, cols, w, win, delay);
 				break;
 			case '=':
 			case '+':
 				delay += 10;
-				draw_window(rows, cols, w, delay);
+				draw_window(rows, cols, w, win, delay);
 				break;
 			case '_':
 			case '-':
 				delay -= 10;
-				draw_window(rows, cols, w, delay);
+				draw_window(rows, cols, w, win, delay);
 				break;
 			case 'P':
 			case 'p':
@@ -196,7 +210,7 @@ int main(int argc, char *argv[])
 				while (!pdone) {
 					timeout(delay);
 					w.next_gen();
-					draw_window(rows, cols, w, delay);
+					draw_window(rows, cols, w, win, delay);
 					int cc = getch();
 					switch (cc) {
 						case ERR: continue;
@@ -207,12 +221,12 @@ int main(int argc, char *argv[])
 						case '=':
 						case '+':
 							delay += 10;
-							draw_window(rows, cols, w, delay);
+							draw_window(rows, cols, w, win, delay);
 							break;
 						case '_':
 						case '-':
 							delay -= 10;
-							draw_window(rows, cols, w, delay);
+							draw_window(rows, cols, w, win, delay);
 							break;
 						case 'Q':
 						case 'q':
@@ -230,11 +244,11 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-void draw_window(int rows, int cols, world &w, int delay)
+void draw_window(int rows, int cols, world &w, window &win, int delay)
 {
 	draw_labels(rows, cols, w.get_name().c_str(), w.curr_gen(), delay);
 	draw_border(rows, cols);
-	draw_cells(rows, cols, w);
+	draw_cells(w, win);
 	curs_set(0);
 	refresh();
 }
@@ -267,6 +281,27 @@ void draw_border(int rows, int cols)
 	return;
 }
 
+void draw_cells(world &w, window &win)
+{
+	// Cell state/character variables
+	char d = w.get_dead_char();
+	char a = w.get_alive_char();
+	char c;
+
+	for (int i=0; i<win.get_height(); i++) {
+		for (int j=0; j<win.get_width(); j++) {
+			int ret = win.get_cell(j,i);
+			if (ret == -1) continue; //no cell exists in terrain to print here
+			else if(ret == 1) c=a;
+			else c=d;
+			mvaddch(i+3,j+1,c);
+		}
+	}
+
+	return;
+}
+
+/*
 void draw_cells(int rows, int cols, world &w)
 {
 	// Cell state/character variables
@@ -301,6 +336,7 @@ void draw_cells(int rows, int cols, world &w)
 
 	return;
 }
+*/
 
 /*******************************************************************/
 /*														FUNCTIONS													 	*/
