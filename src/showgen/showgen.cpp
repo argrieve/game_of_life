@@ -277,6 +277,8 @@ void show_help()
 	cout << "\t   \tbe followed by a positive integer. If omitted, the number\n";	
 	cout << "\t   \tof generations is zero.\n\n";	
 	cout << "\t-h \tDisplay help and information.\n\n";
+	cout << "\t-f \tSpecify a .aut file to read from. Filename must immediately\n";
+	cout << "\t   \tfollow the switch.\n\n";
 	cout << "\t-tx\tSet the x-range of the terrain. Switch should be followed\n";
 	cout << "\t   \tby a coordinate pair, where each coordinate is seperated \n";
 	cout << "\t   \tby a comma or a space. This switch will override any value\n";
