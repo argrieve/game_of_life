@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
 	world w(*cnfg);
 
 	/**********************/
-	/* ` `BEGIN CURSES		*/
+	/*    BEGIN CURSES		*/
 	/**********************/
 	initscr();
   noecho();
@@ -208,9 +208,15 @@ int main(int argc, char *argv[])
 	// Window variables
 	int rows, cols;
 	getmaxyx(stdscr, rows, cols);
+	// Check window size
+	if (cols < 40 || rows < 20) {
+		endwin();
+		cerr << "Terminal window must be at least 40 columns by 20 rows.\n";
+		return 0;
+	}
+
 	rows--; cols--;
 	int delay = 250;
-	
 	window win(cols-2, rows-5, w);
 
 	// Draw the window (gen 0)
