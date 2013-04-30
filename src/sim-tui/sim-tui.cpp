@@ -32,10 +32,54 @@ using namespace std;
 /*											FUNCTION PROTOTYPES												 */
 /*******************************************************************/
 
+/*
+ * Redraws the ncurses window with the current/updated state of the
+ * world, window, and delay properties.
+ *
+ * INPUT: rows Number of rows in the current window
+ * INPUT: cols Number of columns in the current window
+ * INPUT: &w World object to write to screen
+ * INPUT: &win Window object to view the world through
+ * INPUT: delay Delay between successive world/screen updates
+ */ 
 void draw_window(int rows, int cols, world &w, window &win, int delay);
+
+/* 
+ * Draws the labels above and below the world to the window.
+ *
+ * INPUT: rows Number of rows in the current window
+ * INPUT: cols Number of columns in the current window
+ * INPUT: *name Name of the world/simulation
+ * INPUT: gen Current generation
+ * INPUT: delay Delay between successive world/screen updates
+ */
 void draw_labels(int rows, int cols, const char *name, int gen, int delay);
+
+/*
+ * Draws the world border to the window.
+ *
+ * INPUT: rows Number of rows in the current window
+ * INPUT: cols Number of columns in the current window
+ */
 void draw_border(int rows, int cols);
+
+/*
+ * Draw scrollbars and their current positions to the window.
+ *
+ * INPUT: rows Number of rows in the current window
+ * INPUT: cols Number of columns in the current window
+ * INPUT: &win Window class that computes states for the scrollbars
+ */
 void draw_scrollbars(int rows, int cols, window &win);
+
+/*
+ * Gets the state of cells in the viewing window, and draws them to
+ * the screen.
+ *
+ * INPUT: &w World object that contains dead/alive characters
+ * INPUT: &win Window object to view the world through
+ *
+ */
 void draw_cells(world &w, window &win);
 
 /*
@@ -153,7 +197,9 @@ int main(int argc, char *argv[])
 	// Build world
 	world w(*cnfg);
 
-	// Begin NCURSES
+	/**********************/
+	/* ` `BEGIN CURSES		*/
+	/**********************/
 	initscr();
   noecho();
 	cbreak();
@@ -166,16 +212,6 @@ int main(int argc, char *argv[])
 	int delay = 250;
 	
 	window win(cols-2, rows-5, w);
-	/*
-	cout << "rows: " << rows << " " << "cols: " << cols << endl;
-	for (int i=0; i<win.get_height(); i++) {
-		for (int j=0; j<win.get_width(); j++) {
-			int ret = win.get_cell(j,i);
-			if (ret != -1)
-				printf("(%d,%d) : %d\n", j, i, ret);
-		}
-	}
-	*/
 
 	// Draw the window (gen 0)
 	draw_window(rows, cols, w, win, delay);
@@ -223,6 +259,7 @@ int main(int argc, char *argv[])
 				break;
 			case 'P':
 			case 'p':
+				// PLAY LOOP
 				bool pdone = false;
 				while (!pdone) {
 					timeout(delay);
@@ -231,6 +268,22 @@ int main(int argc, char *argv[])
 					int cc = getch();
 					switch (cc) {
 						case ERR: continue;
+						case KEY_UP:
+							win.scroll_up();
+							draw_window(rows, cols, w, win, delay);
+							break;
+						case KEY_DOWN:
+							win.scroll_down();
+							draw_window(rows, cols, w, win, delay);
+							break;
+						case KEY_LEFT:
+							win.scroll_left();
+							draw_window(rows, cols, w, win, delay);
+							break;
+						case KEY_RIGHT:
+							win.scroll_right();
+							draw_window(rows, cols, w, win, delay);
+							break;
 						case 'P':
 						case 'p':
 							pdone = true;
@@ -252,7 +305,7 @@ int main(int argc, char *argv[])
 							break;
 					}
 				}
-				break;
+				break; // End PLAY loop
 		};
 	}
 
@@ -260,6 +313,23 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+
+
+/*******************************************************************/
+/*														FUNCTIONS													 	*/
+/*******************************************************************/
+
+
+/*
+ * Redraws the ncurses window with the current/updated state of the
+ * world, window, and delay properties.
+ *
+ * INPUT: rows Number of rows in the current window
+ * INPUT: cols Number of columns in the current window
+ * INPUT: &w World object to write to screen
+ * INPUT: &win Window object to view the world through
+ * INPUT: delay Delay between successive world/screen updates
+ */ 
 void draw_window(int rows, int cols, world &w, window &win, int delay)
 {
 	draw_labels(rows, cols, w.get_name().c_str(), w.curr_gen(), delay);
@@ -270,6 +340,15 @@ void draw_window(int rows, int cols, world &w, window &win, int delay)
 	refresh();
 }
 
+/* 
+ * Draws the labels above and below the world to the window.
+ *
+ * INPUT: rows Number of rows in the current window
+ * INPUT: cols Number of columns in the current window
+ * INPUT: *name Name of the world/simulation
+ * INPUT: gen Current generation
+ * INPUT: delay Delay between successive world/screen updates
+ */
 void draw_labels(int rows, int cols, const char *name, int gen, int delay)
 {
 	mvprintw(0, (cols-strlen(name))/2, "%s", name);
@@ -281,6 +360,13 @@ void draw_labels(int rows, int cols, const char *name, int gen, int delay)
 	mvprintw(rows, cols-strlen("Arrows:scroll"), "Arrows:scroll");
 
 }
+
+/*
+ * Draws the world border to the window.
+ *
+ * INPUT: rows Number of rows in the current window
+ * INPUT: cols Number of columns in the current window
+ */
 void draw_border(int rows, int cols)
 {
 	mvprintw(2,0,"+");
@@ -298,6 +384,13 @@ void draw_border(int rows, int cols)
 	return;
 }
 
+/*
+ * Draw scrollbars and their current positions to the window.
+ *
+ * INPUT: rows Number of rows in the current window
+ * INPUT: cols Number of columns in the current window
+ * INPUT: &win Window class that computes states for the scrollbars
+ */
 void draw_scrollbars(int rows, int cols, window &win)
 {
 	int vsize = win.get_vscroll_size();
@@ -309,7 +402,8 @@ void draw_scrollbars(int rows, int cols, window &win)
 		mvprintw(3,cols, "^");
 		mvprintw(rows-2,cols, "v");
 		// Place scroller
-		for (int i=0; i<vsize; i++) mvprintw(4+i,cols,"#");
+		int offset = win.get_vscroll_pos();
+		for (int i=offset; i<vsize+offset; i++) mvprintw(4+i,cols,"#");
 	}
 
 	// Draw horizontal scroll bar
@@ -317,15 +411,22 @@ void draw_scrollbars(int rows, int cols, window &win)
 		// Place arrows
 		mvprintw(rows-1, 1, "<");
 		mvprintw(rows-1, cols-1, ">");
-		//mvprintw(rows-3,1,"%d", win.get_width());
-		//mvprintw(rows-2,1,"%d", hsize);
 		// Place scroller
-		for (int i=0; i<hsize; i++) mvprintw(rows-1, 2+i, "#");
+		int offset = win.get_hscroll_pos();
+		for (int i=offset; i<hsize+offset; i++) mvprintw(rows-1, 2+i, "#");
 	}
 
 	return;
 }
 
+/*
+ * Gets the state of cells in the viewing window, and draws them to
+ * the screen.
+ *
+ * INPUT: &w World object that contains dead/alive characters
+ * INPUT: &win Window object to view the world through
+ *
+ */
 void draw_cells(world &w, window &win)
 {
 	// Cell state/character variables
@@ -345,47 +446,6 @@ void draw_cells(world &w, window &win)
 
 	return;
 }
-
-/*
-void draw_cells(int rows, int cols, world &w)
-{
-	// Cell state/character variables
-	char d = w.get_dead_char();
-	char a = w.get_alive_char();
-	char c;
-
-	// Cell indexing variables
-	int start_x = w.get_anchor_x();
-	int start_y = w.get_anchor_y();
-	int end_x = start_x + w.get_width();
-	int end_y = start_y - w.get_height();
-
-	// Windowing position variables
-	int curr_row; //denotes 'y'
-	int curr_col; //denotes 'x'
-	
-	// Loop through and get all cells
-	curr_row = 3;
-	for (int i=start_y; i>end_y; i--) {
-		curr_col = 1;
-		for (int j=start_x; j<end_x; j++) {
-			// Set the character to print	
-			if (w.get_cell(j,i)) c=a; else c=d;
-			mvaddch(curr_row, curr_col, c);
-			curr_col++;
-			if (curr_col >= cols-1) break;
-		}
-		curr_row++;
-		if (curr_row > rows-2) break;
-	}
-
-	return;
-}
-*/
-
-/*******************************************************************/
-/*														FUNCTIONS													 	*/
-/*******************************************************************/
 
 /*
  * Parses a coordinate pair out of a string or a pair of strings (if
@@ -436,7 +496,6 @@ void show_help()
 	// Usage information
 	cout << "\n\nUSAGE\n\n";
 	cout << "\t./sim-tui [-f <file>] [options]\n";
-	//cout << "\t./sim-tui [options] < <file>\n";
 
 	// Legal switches
 	cout << "\n\nSWITCHES\n\n";
@@ -452,8 +511,12 @@ void show_help()
 
 	// Controls
 	cout << "\n\nCONTROLS\n\n";
-	cout << "\t  q \tbleh\n\n";
-	cout << "\t  p \tbleh\n\n";
-	cout << "\t  s \tbleh\n\n";
-	cout << "\tArrow\tbleh\n\n";
+	cout << "\t  q \tQuit the program.\n\n";
+	cout << "\t  s \tStep to the next generation i+1.\n\n";
+	cout << "\t  p \tAutomatically step to generation i+1 after time DELAY\n";
+	cout << "\t    \tmilliseconds.\n\n";
+	cout << "\t  + \tIncrement time delay.\n\n";
+	cout << "\t  - \tDecrement time delay.\n\n";
+	cout << "\tArrow\tMove viewing window (if world is larger than the\n";
+	cout << "\t     \tprogram window.) Otherwise, no effect.\n\n";
 }

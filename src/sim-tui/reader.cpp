@@ -1,5 +1,5 @@
 /*
- * ComS 229 Project 2: showgen
+ * ComS 229 Project 2: sim-tui
  * Spring 2013
  * Alex Grieve
  *

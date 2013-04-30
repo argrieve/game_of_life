@@ -1,5 +1,5 @@
 /*
- * ComS 229 Project 2: showgen
+ * ComS 229 Project 2: sim-tui
  * Spring 2013
  * Alex Grieve
  *
@@ -179,7 +179,6 @@ void config::print()
 	g = color_alive[1];
 	b = color_alive[2];
 	printf(", (%d, %d, %d);\n", r, g, b);
-
 	cout << "Xrange: " << *range_xl << " to " << *range_xh << "\n";
 	cout << "Yrange: " << *range_yl << " to " << *range_yh << "\n";
 	for (int i=0; i<alive_cells.size(); i+=2)

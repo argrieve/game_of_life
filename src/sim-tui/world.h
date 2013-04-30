@@ -1,5 +1,5 @@
 /*
- * ComS 229 Project 2: showgen
+ * ComS 229 Project 2: sim-tui
  * Spring 2013
  * Alex Grieve
  *
@@ -18,14 +18,14 @@
  */
 class world {
 	// Member variables
-	std::string name;
-	char dead, alive;
-	char *dead_color, *alive_color;
-	unsigned int gen;
+	std::string name; // world name
+	char dead, alive; // dead/alive characters
+	char *dead_color, *alive_color; // RGB colors for dead/alive cells
+	unsigned int gen; // generation number
 	unsigned int width, height;
-	int anchor_x, anchor_y;
-	std::vector<std::vector<int> > cells;
-	std::vector<std::vector<int> > cells_next;
+	int anchor_x, anchor_y; // upper left coordinates of the world
+	std::vector<std::vector<int> > cells; // cell state at i
+	std::vector<std::vector<int> > cells_next; // cell state at i+1
 	public:
 		world(config &cnfg);
 		// Getters
