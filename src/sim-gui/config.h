@@ -1,5 +1,5 @@
 /*
- * ComS 229 Project 2: sim-tui
+ * ComS 229 Project 2: gim-tui
  * Spring 2013
  * Alex Grieve
  *

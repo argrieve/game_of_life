@@ -5,14 +5,10 @@
  *
  * sim-gui.cpp
  *
- * Compile with Makefile: make
- * Alternatively, compile with the following commands:
- *  g++ -c window.cpp
- *  g++ -c reader.cpp
- *  g++ -c world.cpp
- *  g++ -c config.cpp
- *  g++ -c sim-tui.cpp
- *  g++ -o sim-tui sim-tui.o config.o world.o reader.o window.o -lncurses
+ * Compile with the following commands:
+ *	qmake-qt4 -project
+ *	qmake-qt4 sim-gui.pro
+ *	make
  */
 
 #include <stdlib.h>
@@ -20,11 +16,11 @@
 #include <sstream>
 #include <getopt.h>
 #include <string.h>
+#include <QtGui>
 #include "reader.h"
 #include "config.h"
 #include "world.h"
 #include "grid.h"
-#include <QtGui>
 #include "controls.h"
 
 using namespace std;
@@ -164,17 +160,20 @@ int main(int argc, char *argv[])
 	// Initialize grid with generation 0
 	grid->setWorld(w);
 
-	QScrollArea scroll;
-	scroll.setWidget(grid);
-	scroll.viewport()->setBackgroundRole(QPalette::Dark);
-	scroll.viewport()->setAutoFillBackground(true);
-	scroll.setWindowTitle(w->get_name().c_str());
-	scroll.show();
+	QScrollArea *scroll = new QScrollArea;
+	scroll->setWidget(grid);
+	scroll->setWidgetResizable(true);
+	scroll->viewport()->setBackgroundRole(QPalette::Dark);
+	scroll->viewport()->setAutoFillBackground(true);
+	scroll->setWindowTitle(w->get_name().c_str());
+	scroll->show();
 
 	Controls *ctrl = new Controls;
 	ctrl->show();
 
 	QObject::connect(ctrl, SIGNAL(update_sig()), grid, SLOT(update_grid()));
+	QObject::connect(ctrl, SIGNAL(zoom_sig(int)), grid, SLOT(update_zoom(int)));
+	QObject::connect(ctrl, SIGNAL(prog_exit()), scroll, SLOT(close()));
 
 	return app.exec();
 }

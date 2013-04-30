@@ -1,3 +1,11 @@
+/*
+ * ComS 229 Project 2: sim-gui
+ * Spring 2013
+ * Alex Grieve
+ *
+ * grid.cpp
+ */
+
 #include <QtGui>
 
 #include "grid.h"
@@ -8,10 +16,14 @@ Grid::Grid(QWidget *parent)
 {
 	setAttribute(Qt::WA_StaticContents);
 	setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-
 	zoom = 8;
 }
 
+/*
+ * Determine the preferred size of the widget
+ *
+ * RETURN: QSize object containing the perferred size
+ */
 QSize Grid::sizeHint() const
 {
 	QSize size = zoom * image.size();
@@ -20,16 +32,31 @@ QSize Grid::sizeHint() const
 	return size;
 }
 
+/*
+ * Set the QColor object for alive cells
+ *
+ * INPUT: newColor QColor object to assign to alive cells
+ */
 void Grid::setAliveColor(const QColor &newColor)
 {
 	aColor = newColor;
 }
 
+/*
+ * Set the QColor object for dead cells
+ *
+ * INPUT: newColor QColor object to assign to dead cells
+ */
 void Grid::setDeadColor(const QColor &newColor)
 {
 	dColor = newColor;
 }
 
+/*
+ * Set the zoom factor and update the grid accordingly
+ *
+ * INPUT newZoom New zoom value
+ */
 void Grid::setZoomFact(int newZoom)
 {
 	if (newZoom < 1)
@@ -42,6 +69,11 @@ void Grid::setZoomFact(int newZoom)
 	}
 }
 
+/*
+ * Initialize the grid with the given world object
+ *
+ * INPUT: *ptr World object to map to the grid
+ */
 void Grid::setWorld(world *ptr)
 {
 	// Set the world pointer
@@ -61,13 +93,10 @@ void Grid::setWorld(world *ptr)
 	updateGeometry();
 }
 
-void Grid::setCell(int x, int y, bool alive) 
-{
-	if (alive) image.setPixel(x, y, aColor.rgba());	
-	else image.setPixel(x, y, dColor.rgba());
-//	update(pixelRect(x,y));
-}
 
+/*
+ * Update all cells to generation i+1, then update the grid window
+ */
 void Grid::update_grid()
 {
 	w->next_gen();
@@ -80,6 +109,22 @@ void Grid::update_grid()
 	updateGeometry();
 }
 
+/*
+ * Receive the 'zoom updated' signal, store the new zoom value,
+ * and redraw the grid window based on the new zoom value
+ *
+ * INPUT: nZoom New zoom value
+ */
+void Grid::update_zoom(int nZoom)
+{
+	setZoomFact(nZoom);
+}
+
+/*
+ * Main drawing method, draws the cells to the window
+ *
+ * INPUT event Paint event that is raised when a re-draw ( update(); ) is called
+ */
 void Grid::paintEvent(QPaintEvent *event)
 {
 	QPainter painter(this);
@@ -106,6 +151,13 @@ void Grid::paintEvent(QPaintEvent *event)
 
 }
 
+/*
+ * Gets a rectangle object that represents a cell, where the size
+ * of the rectangle is directly related to the zoom factor
+ *
+ * INPUT: i X-coordinate of the image
+ * INPUT: j Y-coordinate of the image
+ */
 QRect Grid::pixelRect(int i, int j) const
 {
 	if (zoom >= 3) {
@@ -116,38 +168,14 @@ QRect Grid::pixelRect(int i, int j) const
 }
 
 /*
-void IconEditor::mousePressEvent(QMouseEvent *event)
+ * Set the color of the given cell, based on its state
+ *
+ * INPUT: x X-coordinate of the cell
+ * INPUT: y Y-coordinate of the cell
+ * INPUT: alive Determines whether to apply dead or alive color to the cell
+ */
+void Grid::setCell(int x, int y, bool alive) 
 {
-	if (event->button() == Qt::LeftButton) {
-		setImagePixel(event->pos(), true);
-	} else if (event->button() == Qt::RightButton) {
-		setImagePixel(event->pos(), false);
-	}
+	if (alive) image.setPixel(x, y, aColor.rgba());	
+	else image.setPixel(x, y, dColor.rgba());
 }
-
-void IconEditor::mouseMoveEvent(QMouseEvent *event)
-{
-	if (event->buttons() & Qt::LeftButton) {
-		setImagePixel(event->pos(), true);
-	} else if (event->buttons() & Qt::RightButton) {
-		setImagePixel(event->pos(), false);
-	}
-}
-
-
-void IconEditor::setImagePixel(const QPoint &pos, bool opaque)
-{
-	int i = pos.x() / zoom;
-	int j = pos.y() / zoom;
-
-	if (image.rect().contains(i, j)) {
-		if (opaque) {
-			image.setPixel(i, j, penColor().rgba());
-		} else {
-			image.setPixel(i, j, qRgba(0, 0, 0, 0));
-		}
-
-		update(pixelRect(i, j));
-	}
-}
-*/
