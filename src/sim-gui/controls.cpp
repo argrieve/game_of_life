@@ -2,11 +2,14 @@
 
 #include "controls.h"
 #include "stdio.h"
+#include "unistd.h"
 
 Controls::Controls(QWidget *parent)
 : QDialog(parent)
 {
 	gen = 0;
+	play_set = false;
+
 	// Widget Init
 	gen_num = new QLabel(QString('0'));
 	gen_label = new QLabel("Generation:");
@@ -16,6 +19,8 @@ Controls::Controls(QWidget *parent)
 	quit = new QPushButton("Quit");
 	play = new QPushButton("Play");
 	step = new QPushButton("Step");
+	timer = new QTimer;
+	timer->setSingleShot(false);
 
 	// Layouts
 	QHBoxLayout *delay_layout = new QHBoxLayout;
@@ -42,14 +47,17 @@ Controls::Controls(QWidget *parent)
 	setFixedHeight(sizeHint().height());
 
 	// Connections
-	delay_box->setRange(0,2500);
-	delay_slider->setRange(0,2500);
+	delay_box->setRange(1,1000);
+	delay_slider->setRange(1,1000);
 	QObject::connect(delay_box, SIGNAL(valueChanged(int)), delay_slider, SLOT(setValue(int)));
 	QObject::connect(delay_slider, SIGNAL(valueChanged(int)), delay_box, SLOT(setValue(int)));
 	delay_box->setValue(250);
 
 	QObject::connect(quit, SIGNAL(clicked()), this, SLOT(close()));
 	QObject::connect(step, SIGNAL(clicked()), this, SLOT(step_gen()));
+	QObject::connect(play, SIGNAL(clicked()), this, SLOT(play_toggle()));
+	QObject::connect(timer, SIGNAL(timeout()), this, SLOT(step_gen()));
+	QObject::connect(delay_box, SIGNAL(valueChanged(int)), timer, SLOT(start(int)));
 }
 
 void Controls::step_gen()
@@ -62,4 +70,17 @@ void Controls::step_gen()
 
 	// Signal grid to update its state
 	emit update_sig();
+}
+
+void Controls::play_toggle()
+{
+	play_set = !play_set;
+	if (play_set) {
+		//start timer
+		timer->start(delay_box->value());
+	}
+	else {
+		//stop timer
+		timer->stop();
+	}
 }

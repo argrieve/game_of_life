@@ -13,6 +13,7 @@ class Controls : public QDialog
 	Q_OBJECT
 
 	unsigned int gen;
+	bool play_set;
 
 	public:
 		Controls(QWidget *parent = 0);
@@ -22,12 +23,14 @@ class Controls : public QDialog
 
 	private slots:
 		void step_gen();
+		void play_toggle();
 
 	private:
 		QLabel *delay_label, *gen_num, *gen_label;
 		QSpinBox *delay_box;
 		QSlider *delay_slider;
 		QPushButton *quit, *play, *step;
+		QTimer *timer;
 };
 
 #endif
