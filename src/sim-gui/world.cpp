@@ -114,12 +114,16 @@ void world::next_gen()
  * INPUT: x Cartesian x-coordinate of the cell
  * INPUT: y Cartesian y-coordinate of the cell
  * RETURN: Cell's state (0=dead, 1=alive)
- */
 int world::get_cell(int x, int y)
 {
 	int scr_x = to_screen_x(x);
 	int scr_y = to_screen_y(y);
 	return cells[scr_x][scr_y];
+}
+*/
+int world::get_cell(int x, int y)
+{
+	return cells[x][y];
 }
 
 /*

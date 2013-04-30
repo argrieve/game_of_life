@@ -1,6 +1,7 @@
 #include <QtGui>
 
 #include "grid.h"
+#include <iostream>
 
 Grid::Grid(QWidget *parent)
 : QWidget(parent)
@@ -8,11 +9,7 @@ Grid::Grid(QWidget *parent)
 	setAttribute(Qt::WA_StaticContents);
 	setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-	//curColor = Qt::black;
 	zoom = 8;
-
-	image = QImage(16, 16, QImage::Format_ARGB32);
-	image.fill(qRgba(0, 0, 0, 0));
 }
 
 QSize Grid::sizeHint() const
@@ -33,16 +30,14 @@ void Grid::setDeadColor(const QColor &newColor)
 	dColor = newColor;
 }
 
-/*
-void IconEditor::setIconImage(const QImage &newImage)
+void Grid::setSize(int w, int h)
 {
-	if (newImage != image) {
-		image = newImage.convertToFormat(QImage::Format_ARGB32);
-		update();
-		updateGeometry();
-	}
+	// Set new image size
+	image = QImage(w, h, QImage::Format_ARGB32);
+
+	// Initialize cells to dead color
+	image.fill(dColor);
 }
-*/
 
 void Grid::setZoomFact(int newZoom)
 {
@@ -54,6 +49,13 @@ void Grid::setZoomFact(int newZoom)
 		update();
 		updateGeometry();
 	}
+}
+
+void Grid::setCell(int x, int y, bool alive) 
+{
+	if (alive) image.setPixel(x, y, aColor.rgba());	
+	else image.setPixel(x, y, dColor.rgba());
+	update(pixelRect(x,y));
 }
 
 void Grid::paintEvent(QPaintEvent *event)

@@ -25,6 +25,7 @@
 #include "world.h"
 #include "grid.h"
 #include <QtGui>
+#include "stdio.h"
 
 using namespace std;
 
@@ -151,7 +152,23 @@ int main(int argc, char *argv[])
 	/**********************/
 	QApplication app(argc, argv);
 
+	// Configure the grid/window
 	Grid *grid = new Grid;
+
+	// Set colors
+	char *ptr = w.get_dead_color();
+	grid->setDeadColor(QColor((unsigned char)ptr[0], (unsigned char)ptr[1], (unsigned char)ptr[2]));
+	ptr = w.get_alive_color();
+	grid->setAliveColor(QColor((unsigned char)ptr[0], (unsigned char)ptr[1], (unsigned char)ptr[2]));
+	// Set size
+	grid->setSize(w.get_width(), w.get_height());
+
+	// Set alive cells
+	for (int i=0; i<w.get_height(); i++) {
+		for (int j=0; j<w.get_width(); j++) {
+			grid->setCell(j, i, w.get_cell(j, i));
+		}
+	}
 
 	QScrollArea scroll;
 	scroll.setWidget(grid);

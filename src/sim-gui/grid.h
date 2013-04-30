@@ -26,6 +26,9 @@ class Grid : public QWidget
 		void setZoomFact(int newZoom);
 		int zoomFact() const { return zoom; }
 
+		void setSize(int w, int h);
+		void setCell(int x, int y, bool alive);
+
 		//void setIconImage(const QImage &newImage);
 		//QImage iconImage() const { return image; }
 		QSize sizeHint() const;
