@@ -15,7 +15,7 @@ Xrange
 
 Name "Super Awesome File";
 
-Chars 0,			*;
+Chars 126,			49;
 Colors (1, 2, 3), (4,5,6);
 
 Initial { 

@@ -81,6 +81,11 @@ int main(int argc, char *argv[])
 	{
 		switch (opt) {
 			case 'f':
+				// check extension
+				if (strstr(argv[optind-1], ".aut") == NULL) {
+					cerr << "File must have extension '.aut'\n";
+					return 1;
+				}
 				filename = argv[optind-1];
 				break;
 
@@ -130,10 +135,27 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	// Search for filename if none was found
+	if (filename == NULL && argc > 1) {
+		for (int i=1; i<argc; i++) {
+			// See if argument has '.aut' extension
+			if (strstr(argv[i], ".aut") != NULL) {
+				filename = argv[i];
+				break;
+			}
+		}
+	}
+
 	// Read input file
 	config *cnfg = new config();
 	reader rd;
-	rd.read(*cnfg, filename);
+	try {
+		rd.read(*cnfg, filename);
+	}
+	catch (bad_alloc) {
+		cerr << "ERROR: Unable to read file.\n";
+		return 1;
+	}
 
 	// Override terrain ranges
 	if (tx_found) cnfg->setX(tx_l, tx_h);
@@ -237,8 +259,8 @@ void show_help()
 	// Legal switches
 	cout << "\n\nSWITCHES\n\n";
 	cout << "\t-h \tDisplay help and information.\n\n";
-	cout << "\t-f \tSpecify a .aut file to read from. Filename must immediately\n";
-	cout << "\t   \tfollow the switch.\n\n";
+	cout << "\t-f \tExplicitly specify a .aut file to read from. Filename must\n";
+	cout << "\t   \timmediately follow the switch.\n\n";
 	cout << "\t-tx\tSet the x-range of the terrain. Switch should be followed\n";
 	cout << "\t   \tby a coordinate pair, where each coordinate is seperated \n";
 	cout << "\t   \tby a comma or a space. This switch will override any value\n";
