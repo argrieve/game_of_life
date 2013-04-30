@@ -21,7 +21,7 @@ class Controls : public QDialog
 		void update_sig();
 
 	private slots:
-		void next_gen();
+		void step_gen();
 
 	private:
 		QLabel *delay_label, *gen_num, *gen_label;

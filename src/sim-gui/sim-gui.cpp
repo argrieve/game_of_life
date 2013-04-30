@@ -160,14 +160,9 @@ int main(int argc, char *argv[])
 	grid->setDeadColor(QColor((unsigned char)ptr[0], (unsigned char)ptr[1], (unsigned char)ptr[2]));
 	ptr = w->get_alive_color();
 	grid->setAliveColor(QColor((unsigned char)ptr[0], (unsigned char)ptr[1], (unsigned char)ptr[2]));
-	// Set size
-	grid->setSize(w->get_width(), w->get_height());
-
-	// Set alive cells
+	
+	// Initialize grid with generation 0
 	grid->setWorld(w);
-
-	Controls *ctrl = new Controls;
-	ctrl->show();
 
 	QScrollArea scroll;
 	scroll.setWidget(grid);
@@ -175,6 +170,9 @@ int main(int argc, char *argv[])
 	scroll.viewport()->setAutoFillBackground(true);
 	scroll.setWindowTitle(w->get_name().c_str());
 	scroll.show();
+
+	Controls *ctrl = new Controls;
+	ctrl->show();
 
 	QObject::connect(ctrl, SIGNAL(update_sig()), grid, SLOT(update_grid()));
 

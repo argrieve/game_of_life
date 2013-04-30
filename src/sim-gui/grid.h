@@ -18,21 +18,20 @@ class Grid : public QWidget
 
 	public:
 		Grid(QWidget *parent = 0);
+		QSize sizeHint() const;
 
+		// Color getters/setters
 		void setAliveColor(const QColor &newColor);
 		QColor aliveColor() const { return aColor; }
 		void setDeadColor(const QColor &newColor);
 		QColor deadColor() const { return dColor; }
 
+		// Zoom factor getter/setter
 		void setZoomFact(int newZoom);
 		int zoomFact() const { return zoom; }
 
-		void setSize(int w, int h);
-		void setCell(int x, int y, bool alive);
-		
+		// World initialization	
 		void setWorld(world *ptr);
-
-		QSize sizeHint() const;
 	
 	public slots:
 		void update_grid();
@@ -43,6 +42,7 @@ class Grid : public QWidget
 	private:
 		//void setImagePixel(const QPoint &pos, bool opaque);
 		QRect pixelRect(int i, int j) const;
+		void setCell(int x, int y, bool alive);
 
 		QColor aColor, dColor;
 		QImage image;

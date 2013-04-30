@@ -30,15 +30,6 @@ void Grid::setDeadColor(const QColor &newColor)
 	dColor = newColor;
 }
 
-void Grid::setSize(int w, int h)
-{
-	// Set new image size
-	image = QImage(w, h, QImage::Format_ARGB32);
-
-	// Initialize cells to dead color
-	image.fill(dColor);
-}
-
 void Grid::setZoomFact(int newZoom)
 {
 	if (newZoom < 1)
@@ -53,7 +44,13 @@ void Grid::setZoomFact(int newZoom)
 
 void Grid::setWorld(world *ptr)
 {
+	// Set the world pointer
 	w = ptr;
+
+	// Set the grid image
+	image = QImage(w->get_width(), w->get_height(), QImage::Format_ARGB32);
+	image.fill(dColor);
+
 	// Initialize the grid with gen 0
 	for (int i=0; i<w->get_height(); i++) {
 		for (int j=0; j<w->get_width(); j++) {
@@ -109,6 +106,14 @@ void Grid::paintEvent(QPaintEvent *event)
 
 }
 
+QRect Grid::pixelRect(int i, int j) const
+{
+	if (zoom >= 3) {
+		return QRect(zoom * i + 1, zoom * j + 1, zoom -1, zoom -1);
+	} else {
+		return QRect(zoom * i, zoom * j, zoom, zoom);
+	}
+}
 
 /*
 void IconEditor::mousePressEvent(QMouseEvent *event)
@@ -144,32 +149,5 @@ void IconEditor::setImagePixel(const QPoint &pos, bool opaque)
 
 		update(pixelRect(i, j));
 	}
-}
-*/
-
-QRect Grid::pixelRect(int i, int j) const
-{
-	if (zoom >= 3) {
-		return QRect(zoom * i + 1, zoom * j + 1, zoom -1, zoom -1);
-	} else {
-		return QRect(zoom * i, zoom * j, zoom, zoom);
-	}
-}
-
-/*
-int main(int argc, char *argv[])
-{
-	QApplication app(argc, argv);
-
-	IconEditor *iconEditor = new IconEditor;
-
-	QScrollArea scrollArea;
-	scrollArea.setWidget(iconEditor);
-	scrollArea.viewport()->setBackgroundRole(QPalette::Dark);
-	scrollArea.viewport()->setAutoFillBackground(true);
-	scrollArea.setWindowTitle(QObject::tr("Icon Editor"));
-
-	scrollArea.show();
-	return app.exec();
 }
 */

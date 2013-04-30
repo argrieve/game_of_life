@@ -49,14 +49,17 @@ Controls::Controls(QWidget *parent)
 	delay_box->setValue(250);
 
 	QObject::connect(quit, SIGNAL(clicked()), this, SLOT(close()));
-	QObject::connect(step, SIGNAL(clicked()), this, SLOT(next_gen()));
+	QObject::connect(step, SIGNAL(clicked()), this, SLOT(step_gen()));
 }
 
-void Controls::next_gen()
+void Controls::step_gen()
 {
+	// Update generation count
 	gen++;
 	char tmp[20];
 	sprintf(tmp, "%d", gen);
 	gen_num->setText(QString(tmp));
+
+	// Signal grid to update its state
 	emit update_sig();
 }
