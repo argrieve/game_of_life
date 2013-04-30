@@ -51,11 +51,24 @@ void Grid::setZoomFact(int newZoom)
 	}
 }
 
+void Grid::setWorld(world *ptr)
+{
+	w = ptr;
+	// Initialize the grid with gen 0
+	for (int i=0; i<w->get_height(); i++) {
+		for (int j=0; j<w->get_width(); j++) {
+			setCell(j, i, w->get_cell(j, i));
+		}
+	}
+	update();
+	updateGeometry();
+}
+
 void Grid::setCell(int x, int y, bool alive) 
 {
 	if (alive) image.setPixel(x, y, aColor.rgba());	
 	else image.setPixel(x, y, dColor.rgba());
-	update(pixelRect(x,y));
+//	update(pixelRect(x,y));
 }
 
 void Grid::update_grid()
@@ -66,6 +79,8 @@ void Grid::update_grid()
 			setCell(j, i, w->get_cell(j, i));
 		}
 	}
+	update();
+	updateGeometry();
 }
 
 void Grid::paintEvent(QPaintEvent *event)

@@ -12,6 +12,8 @@ class Controls : public QDialog
 {
 	Q_OBJECT
 
+	unsigned int gen;
+
 	public:
 		Controls(QWidget *parent = 0);
 

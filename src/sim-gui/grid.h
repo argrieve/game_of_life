@@ -10,9 +10,7 @@ class Grid : public QWidget
 {
 	Q_OBJECT
 
-	//Q_PROPERTY(QImage iconImage READ iconImage WRITE setIconImage)
 	Q_PROPERTY(int zoomFactor READ zoomFact WRITE setZoomFact)
-
 	Q_PROPERTY(QColor aliveColor READ aliveColor WRITE setAliveColor)
 	Q_PROPERTY(QColor deadColor READ deadColor WRITE setDeadColor)
 	
@@ -31,18 +29,15 @@ class Grid : public QWidget
 
 		void setSize(int w, int h);
 		void setCell(int x, int y, bool alive);
-		void setWorld(world *ptr) { w = ptr; }
+		
+		void setWorld(world *ptr);
 
-		//void setIconImage(const QImage &newImage);
-		//QImage iconImage() const { return image; }
 		QSize sizeHint() const;
 	
 	public slots:
 		void update_grid();
 
 	protected:
-		//void mousePressEvent(QMouseEvent *event);
-		//void mouseMoveEvent(QMouseEvent *event);
 		void paintEvent(QPaintEvent *event);
 
 	private:

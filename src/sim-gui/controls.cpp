@@ -1,12 +1,14 @@
 #include <QtGui>
 
 #include "controls.h"
+#include "stdio.h"
 
 Controls::Controls(QWidget *parent)
 : QDialog(parent)
 {
+	gen = 0;
 	// Widget Init
-	gen_num = new QLabel("gen_num");
+	gen_num = new QLabel(QString('0'));
 	gen_label = new QLabel("Generation:");
 	delay_label = new QLabel("Delay:");
 	delay_box = new QSpinBox;
@@ -52,5 +54,9 @@ Controls::Controls(QWidget *parent)
 
 void Controls::next_gen()
 {
+	gen++;
+	char tmp[20];
+	sprintf(tmp, "%d", gen);
+	gen_num->setText(QString(tmp));
 	emit update_sig();
 }

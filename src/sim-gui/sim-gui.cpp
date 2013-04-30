@@ -164,11 +164,6 @@ int main(int argc, char *argv[])
 	grid->setSize(w->get_width(), w->get_height());
 
 	// Set alive cells
-	for (int i=0; i<w->get_height(); i++) {
-		for (int j=0; j<w->get_width(); j++) {
-			grid->setCell(j, i, w->get_cell(j, i));
-		}
-	}
 	grid->setWorld(w);
 
 	Controls *ctrl = new Controls;
