@@ -25,7 +25,7 @@
 #include "world.h"
 #include "grid.h"
 #include <QtGui>
-#include "stdio.h"
+#include "controls.h"
 
 using namespace std;
 
@@ -169,6 +169,10 @@ int main(int argc, char *argv[])
 			grid->setCell(j, i, w.get_cell(j, i));
 		}
 	}
+
+	Controls *ctrl = new Controls;
+	ctrl->show();
+
 
 	QScrollArea scroll;
 	scroll.setWidget(grid);
