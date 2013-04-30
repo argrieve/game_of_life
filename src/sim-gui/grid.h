@@ -4,6 +4,7 @@
 #include <QColor>
 #include <QImage>
 #include <QWidget>
+#include "world.h"
 
 class Grid : public QWidget
 {
@@ -15,6 +16,8 @@ class Grid : public QWidget
 	Q_PROPERTY(QColor aliveColor READ aliveColor WRITE setAliveColor)
 	Q_PROPERTY(QColor deadColor READ deadColor WRITE setDeadColor)
 	
+	world *w;
+
 	public:
 		Grid(QWidget *parent = 0);
 
@@ -28,10 +31,14 @@ class Grid : public QWidget
 
 		void setSize(int w, int h);
 		void setCell(int x, int y, bool alive);
+		void setWorld(world *ptr) { w = ptr; }
 
 		//void setIconImage(const QImage &newImage);
 		//QImage iconImage() const { return image; }
 		QSize sizeHint() const;
+	
+	public slots:
+		void update_grid();
 
 	protected:
 		//void mousePressEvent(QMouseEvent *event);

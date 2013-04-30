@@ -5,6 +5,7 @@
 Controls::Controls(QWidget *parent)
 : QDialog(parent)
 {
+	// Widget Init
 	gen_num = new QLabel("gen_num");
 	gen_label = new QLabel("Generation:");
 	delay_label = new QLabel("Delay:");
@@ -14,6 +15,7 @@ Controls::Controls(QWidget *parent)
 	play = new QPushButton("Play");
 	step = new QPushButton("Step");
 
+	// Layouts
 	QHBoxLayout *delay_layout = new QHBoxLayout;
 	delay_layout->addWidget(delay_label);
 	delay_layout->addWidget(delay_box);
@@ -36,4 +38,19 @@ Controls::Controls(QWidget *parent)
 	setLayout(main_layout);
 	setWindowTitle("Controls");
 	setFixedHeight(sizeHint().height());
+
+	// Connections
+	delay_box->setRange(0,2500);
+	delay_slider->setRange(0,2500);
+	QObject::connect(delay_box, SIGNAL(valueChanged(int)), delay_slider, SLOT(setValue(int)));
+	QObject::connect(delay_slider, SIGNAL(valueChanged(int)), delay_box, SLOT(setValue(int)));
+	delay_box->setValue(250);
+
+	QObject::connect(quit, SIGNAL(clicked()), this, SLOT(close()));
+	QObject::connect(step, SIGNAL(clicked()), this, SLOT(next_gen()));
+}
+
+void Controls::next_gen()
+{
+	emit update_sig();
 }

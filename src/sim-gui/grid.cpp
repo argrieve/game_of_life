@@ -58,6 +58,16 @@ void Grid::setCell(int x, int y, bool alive)
 	update(pixelRect(x,y));
 }
 
+void Grid::update_grid()
+{
+	w->next_gen();
+	for (int i=0; i<w->get_height(); i++) {
+		for (int j=0; j<w->get_width(); j++) {
+			setCell(j, i, w->get_cell(j, i));
+		}
+	}
+}
+
 void Grid::paintEvent(QPaintEvent *event)
 {
 	QPainter painter(this);

@@ -14,7 +14,13 @@ class Controls : public QDialog
 
 	public:
 		Controls(QWidget *parent = 0);
-	
+
+	signals:
+		void update_sig();
+
+	private slots:
+		void next_gen();
+
 	private:
 		QLabel *delay_label, *gen_num, *gen_label;
 		QSpinBox *delay_box;

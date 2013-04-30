@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
 	if (ty_found) cnfg->setY(ty_l, ty_h);
 
 	// Build world
-	world w(*cnfg);
+	world *w = new world(*cnfg);
 
 
 	/**********************/
@@ -156,30 +156,32 @@ int main(int argc, char *argv[])
 	Grid *grid = new Grid;
 
 	// Set colors
-	char *ptr = w.get_dead_color();
+	char *ptr = w->get_dead_color();
 	grid->setDeadColor(QColor((unsigned char)ptr[0], (unsigned char)ptr[1], (unsigned char)ptr[2]));
-	ptr = w.get_alive_color();
+	ptr = w->get_alive_color();
 	grid->setAliveColor(QColor((unsigned char)ptr[0], (unsigned char)ptr[1], (unsigned char)ptr[2]));
 	// Set size
-	grid->setSize(w.get_width(), w.get_height());
+	grid->setSize(w->get_width(), w->get_height());
 
 	// Set alive cells
-	for (int i=0; i<w.get_height(); i++) {
-		for (int j=0; j<w.get_width(); j++) {
-			grid->setCell(j, i, w.get_cell(j, i));
+	for (int i=0; i<w->get_height(); i++) {
+		for (int j=0; j<w->get_width(); j++) {
+			grid->setCell(j, i, w->get_cell(j, i));
 		}
 	}
+	grid->setWorld(w);
 
 	Controls *ctrl = new Controls;
 	ctrl->show();
-
 
 	QScrollArea scroll;
 	scroll.setWidget(grid);
 	scroll.viewport()->setBackgroundRole(QPalette::Dark);
 	scroll.viewport()->setAutoFillBackground(true);
-	scroll.setWindowTitle(w.get_name().c_str());
+	scroll.setWindowTitle(w->get_name().c_str());
 	scroll.show();
+
+	QObject::connect(ctrl, SIGNAL(update_sig()), grid, SLOT(update_grid()));
 
 	return app.exec();
 }
