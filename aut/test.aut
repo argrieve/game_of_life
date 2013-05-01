@@ -13,9 +13,9 @@ Another { more evil bogus keyword; we must also consume;
 Xrange
 -10 10; Yrange -5 5;
 
-Name "Super Awesome File";
+#Name "Super Awesome File";
 
-Chars 126,			49;
+Chars 24,49;
 Colors (1, 2, 3), (4,5,6);
 
 Initial { 

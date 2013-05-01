@@ -129,8 +129,8 @@ void reader::set_chars(config &cnfg)
 	
 	// Parse the ASCII values
 	string str(data.substr(indx1+6, indx2-indx1));
-	str.erase(str.find(";"), 1);
-	str.erase(str.find(","), 1);
+	str.replace(str.find(";"), 1, " ");
+	str.replace(str.find(","), 1, " ");
 	istringstream stream(str);
 	int one, two;
 	stream >> one >> two;	
@@ -154,8 +154,8 @@ void reader::set_colors(config &cnfg)
 	indx1 = data.find("(", indx1+1);
 	int indx2 = data.find(")", indx1+1);
 	string str1(data.substr(indx1+1, indx2-indx1-1));
-	str1.erase(str1.find(","),1);
-	str1.erase(str1.find(","),1);
+	str1.replace(str1.find(","),1," ");
+	str1.replace(str1.find(","),1," ");
 
 	// Parse dead RGB
 	int dr, dg, db;
@@ -166,8 +166,8 @@ void reader::set_colors(config &cnfg)
 	indx1 = data.find("(",indx1+1);
 	indx2 = data.find(")",indx1+1);
 	string str2(data.substr(indx1+1, indx2-indx1-1));
-	str2.erase(str2.find(","),1);
-	str2.erase(str2.find(","),1);
+	str2.replace(str2.find(","),1," ");
+	str2.replace(str2.find(","),1," ");
 
 	// Parse alive RGB
 	int ar, ag, ab;

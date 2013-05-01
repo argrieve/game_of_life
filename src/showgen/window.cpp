@@ -84,7 +84,7 @@ void window::print_ascii(world &w)
 void window::print_aut(world &w)
 {
 	// Print generation number as a comment
-	cout << "#\n" << "# Generation: " << w.curr_gen() << "\n#\n"; 
+	//cout << "#\n" << "# Generation: " << w.curr_gen() << "\n#\n"; 
 	
 	// Print the name
 	cout << "Name \"" << w.get_name() << "\"\n";
