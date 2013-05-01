@@ -81,7 +81,7 @@ void Grid::setWorld(world *ptr)
 
 	// Set the grid image
 	image = QImage(w->get_width(), w->get_height(), QImage::Format_ARGB32);
-	image.fill(dColor);
+	image.fill(dColor.rgb());
 
 	// Initialize the grid with gen 0
 	for (int i=0; i<w->get_height(); i++) {
